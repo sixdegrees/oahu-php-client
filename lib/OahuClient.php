@@ -12,6 +12,8 @@ class OahuClient {
       'project' => array('title', 'release_date', 'synopsis', 'genres')
     );
     
+    public $projectFilters = array("soon", "live", "featured", "recommended");
+    
     function OahuClient($oahuHost="api.oahu.fr", $clientId, $consumerId, $consumerSecret, $noCache=false) {
         $this->oahuHost       = $oahuHost;
         $this->clientId       = $clientId;
@@ -33,8 +35,11 @@ class OahuClient {
     
     // Movies API
     
-    public function listMovies() {
-      return $this->_get("projects");
+    public function listMovies($filter=null) {
+      if (!in_array($filter, $this->projectFilters)) {
+        $filter = null;
+      }
+      return $this->_get("projects/" . $filter);
     }
     
     public function getMovie($projectId) {
@@ -55,11 +60,31 @@ class OahuClient {
       ));
     }
     
+    public function getMovieVideos($projectId) {
+      return $this->_get("projects/" . $projectId . "/videos");
+    }
+    
+    public function getMoviePhotos($projectId) {
+      return $this->_get("projects/" . $projectId . "/photos");
+    }
+
+    public function getMovieBuzz($projectId) {
+      return $this->_get("projects/" . $projectId . "/buzz");
+    }
+    
+    public function getMovieResources($projectId, $params=array()) {
+      return $this->_get("projects/" . $projectId . "/resources", $params);
+    }
+    
+    public function getMoviePublications($projectId, $params=array()) {
+      return $this->_get("projects/" . $projectId . "/publications", $params);
+    }
+    
     
     // HTTP Plumming...
     
-    private function _get($path, $headers=array("Content-Type: application/json")) {
-      $res = $this->_exec("GET", $path, array(), $headers);
+    private function _get($path, $params=array(), $headers=array()) {
+      $res = $this->_exec("GET", $path, $params, $headers);
       return $res['body'];
     }
     

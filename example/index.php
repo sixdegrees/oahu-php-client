@@ -6,6 +6,16 @@
   
   <body>
     
+    <p>
+      Filters: 
+      <a href="./index.php">all</a>
+      &nbsp;|&nbsp;
+      <? foreach($oahu->projectFilters as $filter) : ?>
+      <a href="./index.php?filter=<?= $filter ?>"><?= $filter ?></a>
+      &nbsp;|&nbsp;
+      <? endforeach ?>
+    </p>
+    
     <h1>List Movies</h1>
     <table width="100%" border="1">
       <tr>
@@ -14,9 +24,9 @@
         <th>Synopsis</th>
         <th>Release Date</th>
       </tr>
-      <?php foreach ($oahu->listMovies() as $movie) : ?>
+      <?php foreach ($oahu->listMovies($_GET['filter']) as $movie) : ?>
       <tr>
-        <td><?= $movie->_id ?></td>
+        <td><a href="./getMovie?id=<?= $movie->_id ?>"><?= $movie->_id ?></a></td>
         <td><?= $movie->title ?></td>
         <td><?= $movie->synopsis ?></td>
         <td><?= $movie->release_date ?></td>

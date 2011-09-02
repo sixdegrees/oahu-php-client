@@ -10,11 +10,11 @@ function debug($elem) {
   echo "</pre>";
 }
 
-$host           = "api.oahu.fr";
-$consumerId     = "YOUR_CONSUMER_ID";
-$consumerSecret = "YOUR_CONSUMER_SECRET";
-$clientId       = "YOUR_CLIENT_ID";
+$environment = "production";
 
-$oahu = new OahuClient($host, $clientId, $consumerId, $consumerSecret, true);
+$config = parse_ini_file('./config/' . $environment . '.ini');
+
+
+$oahu = new OahuClient($config['host'], $config['client_id'], $config['consumer_id'], $config['consumer_secret'], $config['no_cache']);
 
 ?>
