@@ -1,15 +1,10 @@
-<?php 
-require("config.inc.php"); 
-$movie = $oahu->getMovie($_GET['id']);
-?>
-
 <html>
   
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
   
   <body>
     
-    <a href="./index.php"><< Back to Movies list...</a>
+    <a href="<?= url_for('/') ?>"><< Back to Movies list...</a>
     
     <h1><?= $movie->title ?></h1>
     <h2>Release: <?= $movie->release_date ?></h2>
@@ -18,7 +13,7 @@ $movie = $oahu->getMovie($_GET['id']);
 
     <hr>
     <h2>Update Movie</h2>
-    <form action="./updateMovie" method="POST" accept-charset="UTF-8">
+    <form action="<?= url_for("/movies/" . $movie->_id) ?>" method="POST" accept-charset="UTF-8">
       <table>
         <input type="hidden" name="_id" value="<?= $movie->_id ?>" />
         <tr>
@@ -54,7 +49,7 @@ $movie = $oahu->getMovie($_GET['id']);
         <th>Created At</th>
         <th>Updated At</th>
       </tr>
-      <?php foreach($oahu->getMovieResources($_GET["id"]) as $resource) : ?>
+      <?php foreach($resources as $resource) : ?>
       <tr>
         <td><?= $resource->_id ?></td>
         <td><?= $resource->slug ?></td>
@@ -69,7 +64,7 @@ $movie = $oahu->getMovie($_GET['id']);
     
     <hr>
     <h2>Create Resource</h2>
-    <form action='./createResource' method='POST' accept-charset="UTF-8">
+    <form action='<?= url_for("/movies/" . $movie->_id . "/resources")?>' method='POST' accept-charset="UTF-8">
       <table>
         <input type="hidden" name="project_id" value="<?= $movie->_id ?>" />
         <tr>
@@ -104,6 +99,9 @@ $movie = $oahu->getMovie($_GET['id']);
     </form>
     
     <hr>
+    <h2>Pub Accounts</h2>
+    
+    <hr>
     
     <h2>Publications</h2>
     <table width="100%" border="1">
@@ -116,7 +114,7 @@ $movie = $oahu->getMovie($_GET['id']);
         <th>Created At</th>
         <th>Updated At</th>
       </tr>
-      <?php foreach($oahu->getMoviePublications($_GET["id"], array("limit" => 3, "page" => 2)) as $publication) : ?>
+      <?php foreach($publications as $publication) : ?>
       <tr>
         <td><?= $publication->_id ?></td>
         <td><?= $publication->slug ?></td>
@@ -128,23 +126,6 @@ $movie = $oahu->getMovie($_GET['id']);
       </tr>
     <? endforeach ?>
     </table>
-    
-    
-    <hr>
-    <h2>Videos, Photos & Buzz</h2>
-    <table width="100%" border="1">
-      <tr>
-        <th>Videos</th>
-        <th>Photos</th>
-        <th>Buzz</th>
-      </tr>
-      <tr>
-        <td><? debug($oahu->getMovieVideos($_GET['id'])) ?></td>
-        <td><? debug($oahu->getMoviePhotos($_GET['id'])) ?></td>
-        <td><? debug($oahu->getMovieBuzz($_GET['id'])) ?></td>
-      </tr>
-    </table>
-      
     
   </body>
   

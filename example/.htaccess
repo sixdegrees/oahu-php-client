@@ -1,9 +1,18 @@
-RewriteEngine   On
+<IfModule mmod_rewrite.c>
+  Options +FollowSymlinks
+  Options +Indexes
+  RewriteEngine on
 
-#Rewrite Rules
+  # if your app is in a subfolder
+  # RewriteBase /my_app/ 
 
-RewriteRule   ^$		index.php?q=/ [L]
+  # test string is a valid files
+  RewriteCond %{SCRIPT_FILENAME} !-f
+  # test string is a valid directory
+  RewriteCond %{SCRIPT_FILENAME} !-d
 
-RewriteCond   %{REQUEST_FILENAME} !-d
-RewriteCond   %{REQUEST_FILENAME} !-f
-RewriteRule   (.*)  index.php?q=/$1 [L]
+  RewriteRule ^(.*)$   index.php?uri=/$1    [NC,L,QSA]
+  # with QSA flag (query string append),
+  # forces the rewrite engine to append a query string part of the
+  # substitution string to the existing string, instead of replacing it.
+</IfModule>

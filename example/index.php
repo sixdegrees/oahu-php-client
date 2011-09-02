@@ -1,65 +1,64 @@
-<?php require("config.inc.php"); ?>
-
-<html>
-  
-  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-  
-  <body>
-    
-    <p>
-      Filters: 
-      <a href="./index.php">all</a>
-      &nbsp;|&nbsp;
-      <? foreach($oahu->projectFilters as $filter) : ?>
-      <a href="./index.php?filter=<?= $filter ?>"><?= $filter ?></a>
-      &nbsp;|&nbsp;
-      <? endforeach ?>
-    </p>
-    
-    <h1>List Movies</h1>
-    <table width="100%" border="1">
-      <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Synopsis</th>
-        <th>Release Date</th>
-      </tr>
-      <?php foreach ($oahu->listMovies($_GET['filter']) as $movie) : ?>
-      <tr>
-        <td><a href="./getMovie?id=<?= $movie->_id ?>"><?= $movie->_id ?></a></td>
-        <td><?= $movie->title ?></td>
-        <td><?= $movie->synopsis ?></td>
-        <td><?= $movie->release_date ?></td>
-      </tr>
-      <?php endforeach; ?>
-    </table>
+<?php
+require('config.inc.php');
 
 
-    
-    <h2>Create Movie</h2>
-    <form action="./createMovie" method="POST" accept-charset="UTF-8">
-      <table>
-        <tr>
-          <td>Title: </td>
-          <td><input type="text" name="project[title]" value="" size="80"></td>
-        </tr>
-        <tr>
-          <td>Synopsis: </td>
-          <td><textarea name="project[synopsis]" cols="60" rows="5"></textarea></td>
-        </tr>
-        <tr>
-          <td>Release Date:</td>
-          <td><input type="text" name="project[release_date]" value=""></td>
-        </tr>
-        <tr>
-          <td>&nbsp;</td>
-          <td><input type="submit" value="create"></td>
-        </tr>
-        
-      </table>
-      
-    </form>
-    
-  </body>
-  
-</html>
+dispatch('/', 'main');
+function main() {
+  global $oahu;
+  $filter = $_GET['filter'];
+  set('filter', $filter);
+  set('moviesList', $oahu->listMovies($filter));
+  return render('main.html.php');
+}
+
+dispatch_post('/', 'createMovie');
+function createMovie() {
+  global $oahu;
+  $movie = $oahu->createMovie($_POST['project']);
+  if ($movie) {
+    redirect_to('/movies/' . $movie->_id);
+  } else {
+    redirect_to('/movies/');
+  }
+}
+
+dispatch_post('/movies/:id', 'updateMovie');
+function updateMovie() {
+  global $oahu;
+  $movie_id = params("id");
+  if ($movie_id) {
+    $oahu->updateMovie($movie_id, $_POST["project"]);
+    redirect_to('/movies/' . $movie_id);
+  } else {
+    redirect_to('/');
+  }  
+}
+
+dispatch('/movies/:id', 'movie');
+function movie() {
+  global $oahu;
+  $movie_id = params("id");
+  if ($movie_id) {
+    set('movie', $oahu->getMovie($movie_id));
+    set('resources', $oahu->getMovieResources($movie_id));
+    set('publications', $oahu->getMoviePublications($movie_id));
+    return render('movie.html.php');
+  } else {
+    redirect_to("/");
+  }
+}
+
+dispatch_post('/movies/:id/resources', 'createResource');
+function createResource() {
+  global $oahu;
+  $movie_id = params('id');
+  if ($movie_id) {
+    $oahu->createMovieResource($movie_id, $_POST["_type"], $_POST["resource"]);
+    redirect_to("/movies/" . $movie_id);
+  } else {
+    redirect_to("/");
+  }
+}
+
+run();
+?>

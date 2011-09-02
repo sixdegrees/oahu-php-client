@@ -19,7 +19,7 @@ class OahuClient {
       'Resource'  => array('source', 'name', 'description')
     );
     
-    public $projectFilters = array("soon", "live", "featured", "recommended");
+    static $projectFilters = array("soon", "live", "featured", "recommended");
     
     function OahuClient($oahuHost="api.oahu.fr", $clientId, $consumerId, $consumerSecret, $noCache=false) {
         $this->oahuHost       = $oahuHost;
@@ -32,7 +32,7 @@ class OahuClient {
     // Movies API
     
     public function listMovies($filter=null) {
-      if (!in_array($filter, $this->projectFilters)) {
+      if (!in_array($filter, self::$projectFilters)) {
         $filter = null;
       }
       return $this->_get("projects/" . $filter);
@@ -87,6 +87,18 @@ class OahuClient {
         )
       );
     }
+    
+    
+    // Publications API
+    
+    public function listPubAccounts($projectId) {
+      return $this->_get('projects/' . $projectId . '/pub_accounts');
+    }
+    
+    public function publishResource($resourceId, $pubOptions) {
+      
+    }
+    
     
     // Helpers
     
