@@ -10,7 +10,7 @@ function debug($elem) {
   echo "</pre>";
 }
 
-$environment = "production";
+$environment = "local";
 
 $config = parse_ini_file('./config/' . $environment . '.ini');
 

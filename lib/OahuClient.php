@@ -8,8 +8,15 @@ class OahuClient {
     public $consumerId;
     public $noCache;
     
-    private $resourceFields = array(
-      'project' => array('title', 'release_date', 'synopsis', 'genres')
+    
+    static $modelTypes   = array(
+      'Project'   => array('Movie'),
+      'Resource'  => array('Image', 'Video')
+    );
+    
+    static $modelFields  = array(
+      'Project'   => array('title', 'release_date', 'synopsis', 'genres'),
+      'Resource'  => array('source', 'name', 'description')
     );
     
     public $projectFilters = array("soon", "live", "featured", "recommended");
@@ -20,17 +27,6 @@ class OahuClient {
         $this->consumerSecret = $consumerSecret;
         $this->consumerId     = $consumerId;
         $this->noCache        = $noCache;
-    }
-    
-    public function makeResource($resourceType, $data=array()) {
-      $keys = array_intersect_key($this->resourceFields[$resourceType], array_keys($data));
-      $resource = array();
-      foreach ($keys as $k) {
-        if ($data[$k]) {
-          $resource[$k] = stripslashes($data[$k]);
-        }
-      }
-      return $resource;
     }
     
     // Movies API
@@ -49,14 +45,14 @@ class OahuClient {
     public function createMovie($projectData) {
       return $this->_post("projects", array(
         "_type"   => "Movie",
-        "project" => $this->makeResource("project", $projectData)
+        "project" => self::_makeModel("Project", $projectData)
         )
       );
     }
     
     public function updateMovie($projectId, $projectData) {
       return $this->_put("projects/" . $projectId, array(
-        "project" => $this->makeResource("project", $projectData)
+        "project" => self::_makeModel("Project", $projectData)
       ));
     }
     
@@ -80,6 +76,30 @@ class OahuClient {
       return $this->_get("projects/" . $projectId . "/publications", $params);
     }
     
+    //  Resources API
+    public function createMovieResource($projectId, $resourceType, $resourceData) {
+      if (!in_array($resourceType, self::$modelTypes["Resource"])) {
+        throw new Exception("ResourceType " . $resourceType . " does not exist");
+      }
+      return $this->_post("projects/". $projectId . '/resources', array(
+        "_type"   => $resourceType,
+        "resource" => self::_makeModel("Resource", $resourceData)
+        )
+      );
+    }
+    
+    // Helpers
+    
+    private static function _makeModel($modelType, $data=array()) {
+      $keys = array_intersect_key(self::$modelFields[$modelType], array_keys($data));
+      $model = array();
+      foreach ($keys as $k) {
+        if ($data[$k]) {
+          $model[$k] = stripslashes($data[$k]);
+        }
+      }
+      return $model;
+    }
     
     // HTTP Plumming...
     
@@ -96,7 +116,7 @@ class OahuClient {
     private function _put($path, $data, $headers=array()) {
       $res =  $this->_exec("PUT", $path, $data, $headers);
       return $res['body'];
-    }
+     }
     
     private function _exec($type, $path, $params = array(), $headers = array()) {
         $params["consumer_id"] = $this->consumerId;
@@ -132,7 +152,11 @@ class OahuClient {
         $out = curl_exec($s);
         $status = curl_getinfo($s, CURLINFO_HTTP_CODE);
         curl_close($s);
-        $res = array("status" => $status, "body" => json_decode($out));
+        $body = json_decode($out);
+        if (!$body) {
+          $body = array();
+        }
+        $res = array("status" => $status, "body" => $body);
         
         if ($status >= 400) {
           throw new Exception(json_encode($res));
