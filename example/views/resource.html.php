@@ -3,15 +3,11 @@
     
   </head>
   <body>
+    <a href="<?= url_for('/movies/' . $resource->project_id) ?>"><< Back to Movie</a>
+    
+    
     <h1>Resource : <?= $resource->name ?> (<?= $resource->_type ?>)</h1>
-    <?= $resource->description ?>
-    
-    <hr/>
-    <? if ($resource->_type == "Resources::Image"): ?>
-    <img src="<?= $resource->paths->medium ?>.jpg">
-    <? endif ?>
-    
-    <hr/>
+    <?= $resource->description ?>    
     
     <h2>Update Resource</h2>
     <form action='<?= url_for("/movies/" . $resource->project_id . "/resources/" . $resource->_id)?>' method='POST' accept-charset="UTF-8">
@@ -33,6 +29,10 @@
       
     </form>
     
+    <hr/>
+    <? if ($resource->_type == "Resources::Image"): ?>
+    <img src="<?= $resource->paths->medium ?>.jpg">
+    <? endif ?>
     
   </body>
 </html>

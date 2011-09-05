@@ -96,10 +96,7 @@ class OahuClient {
     public function updateMovieResource($projectId, $resourceId, $resourceData) {
       $res = $this->getMovieResource($projectId, $resourceId);
       if ($res->can_edit) {
-        $updateData = array();
-        foreach (array("name", "description") as $f) {
-          $updateData[$f] = $resourceData[$f];
-        }
+        $updateData = self::_makeModel("Resource", $resourceData, array("name", "description"));
         if (count($updateData) > 0) {
           return $this->_put("projects/" . $projectId . "/resources/" . $resourceId, array(
             "resource" => $updateData
@@ -126,8 +123,11 @@ class OahuClient {
     
     // Helpers
     
-    private static function _makeModel($modelType, $data=array()) {
-      $keys = array_intersect_key(self::$modelFields[$modelType], array_keys($data));
+    private static function _makeModel($modelType, $data=array(), $only=null) {
+      $keys = array_intersect(self::$modelFields[$modelType], array_keys($data));
+      if ($only) {
+        $keys = array_intersect($keys, $only);
+      }
       $model = array();
       foreach ($keys as $k) {
         if ($data[$k]) {

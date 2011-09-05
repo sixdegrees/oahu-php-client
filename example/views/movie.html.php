@@ -41,6 +41,7 @@
     <h2>Resources</h2>
     <table width="100%" border="1">
       <tr>
+        <th>Preview</th>
         <th>ID</th>
         <th>Slug</th>
         <th>Type</th>
@@ -51,6 +52,11 @@
       </tr>
       <?php foreach($resources as $resource) : ?>
       <tr>
+        <td align="center">
+          <? if ($resource->_type == "Resources::Image") : ?>
+          <img src="<?= $resource->paths->thumb ?>.jpg" />
+          <? endif?>
+        </td>
         <td><a href="<?= url_for("/movies/" . $movie->_id . "/resources/" . $resource->_id) ?>"><?= $resource->_id ?></a></td>
         <td><?= $resource->slug ?></td>
         <td><?= $resource->_type ?></td>

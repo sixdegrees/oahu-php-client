@@ -11,7 +11,7 @@ function _debug($elem) {
   echo "</pre>";
 }
 
-$environment = "staging";
+$environment = "local";
 
 
 $config = parse_ini_file('./config/' . $environment . '.ini');
