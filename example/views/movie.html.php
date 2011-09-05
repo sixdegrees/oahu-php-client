@@ -51,7 +51,7 @@
       </tr>
       <?php foreach($resources as $resource) : ?>
       <tr>
-        <td><?= $resource->_id ?></td>
+        <td><a href="<?= url_for("/movies/" . $movie->_id . "/resources/" . $resource->_id) ?>"><?= $resource->_id ?></a></td>
         <td><?= $resource->slug ?></td>
         <td><?= $resource->_type ?></td>
         <td><?= $resource->name ?></td>

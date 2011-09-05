@@ -34,8 +34,8 @@ function updateMovie() {
   }  
 }
 
-dispatch('/movies/:id', 'movie');
-function movie() {
+dispatch('/movies/:id', 'showMovie');
+function showMovie() {
   global $oahu;
   $movie_id = params("id");
   if ($movie_id) {
@@ -59,6 +59,31 @@ function createResource() {
     redirect_to("/");
   }
 }
+
+dispatch('/movies/:id/resources/:resource_id', 'showResource');
+function showResource() {
+  global $oahu;
+  $movie_id = params('id');
+  $resource_id = params('resource_id');
+  $resource = $oahu->getMovieResource($movie_id, $resource_id);
+  set('resource', $resource);
+  return render('resource.html.php');
+  if ($resource) {
+    return render('resource.html.php');
+  } else {
+    redirect_to('/movies/');
+  }
+}
+
+dispatch_post('/movies/:id/resources/:resource_id', 'updateResource');
+function updateResource() {
+  global $oahu;
+  $movie_id = params('id');
+  $resource_id = params('resource_id');
+  $oahu->updateMovieResource($movie_id, $resource_id, $_POST['resource']);
+  redirect_to("/movies/" . $movie_id . "/resources/" . $resource_id);
+}
+
 
 run();
 ?>

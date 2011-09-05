@@ -77,6 +77,11 @@ class OahuClient {
     }
     
     //  Resources API
+    
+    public function getMovieResource($projectId, $resourceId) {
+      return $this->_get("projects/" . $projectId . "/resources/" . $resourceId);
+    }
+    
     public function createMovieResource($projectId, $resourceType, $resourceData) {
       if (!in_array($resourceType, self::$modelTypes["Resource"])) {
         throw new Exception("ResourceType " . $resourceType . " does not exist");
@@ -88,6 +93,25 @@ class OahuClient {
       );
     }
     
+    public function updateMovieResource($projectId, $resourceId, $resourceData) {
+      $res = $this->getMovieResource($projectId, $resourceId);
+      if ($res->can_edit) {
+        $updateData = array();
+        foreach (array("name", "description") as $f) {
+          $updateData[$f] = $resourceData[$f];
+        }
+        if (count($updateData) > 0) {
+          return $this->_put("projects/" . $projectId . "/resources/" . $resourceId, array(
+            "resource" => $updateData
+          ));
+        } else {
+          return false;
+        }
+        
+      } else {
+        throw new Exception("The Resource " . $resourceId . " is not editable");
+      }
+    }
     
     // Publications API
     
