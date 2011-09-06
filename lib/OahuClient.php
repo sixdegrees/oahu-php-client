@@ -11,12 +11,14 @@ class OahuClient {
     
     static $modelTypes   = array(
       'Project'   => array('Movie'),
-      'Resource'  => array('Image', 'Video')
+      'Resource'  => array('Image', 'Video', 'ImageList', 'VideoList')
     );
     
     static $modelFields  = array(
-      'Project'   => array('title', 'release_date', 'synopsis', 'genres'),
-      'Resource'  => array('source', 'name', 'description')
+      'Project'               => array('title', 'release_date', 'synopsis', 'genres'),
+      'Resource'              => array('source', 'name', 'description'),
+      'Resources::ImageList'  => array('name', 'description', 'image_ids'),
+      'Resources::VideoList'  => array('name', 'description', 'video_ids')
     );
     
     static $projectFilters = array("soon", "live", "featured", "recommended");
@@ -38,16 +40,27 @@ class OahuClient {
       return $this->_get("projects/" . $filter);
     }
     
-    public function getMovie($projectId) {
+    public function getProject($projectId) {
       return $this->_get("projects/" . $projectId);
     }
-        
-    public function createMovie($projectData) {
+    
+    public function getMovie($projectId) {
+      return $this->getProject($projectId);
+    }
+    
+    public function createProject($projectType, $projectData) {
+      if (!in_array($projectType, self::$modelTypes["Project"])) {
+        throw new Exception("ProjectType " . $projectType . " does not exist");
+      }
       return $this->_post("projects", array(
-        "_type"   => "Movie",
+        "_type"   => $projectType,
         "project" => self::_makeModel("Project", $projectData)
         )
       );
+    }
+    
+    public function createMovie($projectData) {
+      return $this->createProject("Movie", $projectData);
     }
     
     public function updateMovie($projectId, $projectData) {
@@ -86,9 +99,14 @@ class OahuClient {
       if (!in_array($resourceType, self::$modelTypes["Resource"])) {
         throw new Exception("ResourceType " . $resourceType . " does not exist");
       }
+      if (in_array("Resources::" . $resourceType, array_keys(self::$modelFields))) {
+        $resourceModel = "Resources::" . $resourceType;
+      } else {
+        $resourceModel = "Resource";
+      }
       return $this->_post("projects/". $projectId . '/resources', array(
         "_type"   => $resourceType,
-        "resource" => self::_makeModel("Resource", $resourceData)
+        "resource" => self::_makeModel($resourceModel, $resourceData)
         )
       );
     }
@@ -108,6 +126,20 @@ class OahuClient {
       } else {
         throw new Exception("The Resource " . $resourceId . " is not editable");
       }
+    }
+    
+    public function createMovieImageList($projetId, $resourceData) {
+      if (!$resourceData['image_ids']) {
+        throw new Exception("You have to provide image_ids to create a ImageList Resource");
+      }
+      return $this->createMovieResource($projetId, "ImageList", $resourceData);
+    }
+    
+    public function createMovieVideoList($projetId, $resourceData) {
+      if (!$resourceData['video_ids']) {
+        throw new Exception("You have to provide video_ids to create a VideoList Resource");
+      }
+      return $this->createMovieResource($projetId, "VideoList", $resourceData);
     }
     
     // Publications API
@@ -131,7 +163,12 @@ class OahuClient {
       $model = array();
       foreach ($keys as $k) {
         if ($data[$k]) {
-          $model[$k] = stripslashes($data[$k]);
+          if (is_string($data[$k])) {
+            $model[$k] = stripslashes($data[$k]);
+          } else {
+            $model[$k] = $data[$k];
+          }
+          
         }
       }
       return $model;
@@ -182,7 +219,8 @@ class OahuClient {
               curl_setopt($s, CURLOPT_POSTFIELDS, json_encode($params));
               break;
         }
-
+        
+        curl_setopt($s, CURLOPT_TIMEOUT, 3);
         curl_setopt($s, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($s, CURLOPT_HTTPHEADER, $headers);
         $out = curl_exec($s);

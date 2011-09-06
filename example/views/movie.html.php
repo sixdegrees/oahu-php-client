@@ -38,10 +38,11 @@
     
     <hr>
 
-    <h2>Resources</h2>
+    <h2><?= count($resources) ?> Resources</h2>
+    <form action='<?= url_for("/movies/" . $movie->_id . "/resources")?>' method='POST' accept-charset="UTF-8">
     <table width="100%" border="1">
       <tr>
-        <th>Preview</th>
+        <th colspan='2'>Preview</th>
         <th>ID</th>
         <th>Slug</th>
         <th>Type</th>
@@ -52,6 +53,14 @@
       </tr>
       <?php foreach($resources as $resource) : ?>
       <tr>
+        <td>
+          <? if ($resource->_type == "Resources::Image") : ?>
+          <input type="checkbox" value="<?= $resource->_id ?>" name="resource[image_ids][]" />
+          <? endif ?>
+          <? if ($resource->_type == "Resources::Video") : ?>
+          <input type="checkbox" value="<?= $resource->_id ?>" name="resource[video_ids][]" />
+          <? endif ?>
+        </td>
         <td align="center">
           <? if ($resource->_type == "Resources::Image") : ?>
           <img src="<?= $resource->paths->thumb ?>.jpg" />
@@ -70,7 +79,6 @@
     
     <hr>
     <h2>Create Resource</h2>
-    <form action='<?= url_for("/movies/" . $movie->_id . "/resources")?>' method='POST' accept-charset="UTF-8">
       <table>
         <input type="hidden" name="project_id" value="<?= $movie->_id ?>" />
         <tr>

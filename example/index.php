@@ -40,7 +40,7 @@ function showMovie() {
   $movie_id = params("id");
   if ($movie_id) {
     set('movie', $oahu->getMovie($movie_id));
-    set('resources', $oahu->getMovieResources($movie_id));
+    set('resources', $oahu->getMovieResources($movie_id, array("limit" => 10)));
     set('publications', $oahu->getMoviePublications($movie_id));
     return render('movie.html.php');
   } else {

@@ -22,7 +22,7 @@
         </tr>
         <tr>
           <td>&nbsp;</td>
-          <td><input type="submit" value="create" ></td>
+          <td><input type="submit" value="update" ></td>
         </tr>
         
       </table>
@@ -33,6 +33,9 @@
     <? if ($resource->_type == "Resources::Image"): ?>
     <img src="<?= $resource->paths->medium ?>.jpg">
     <? endif ?>
+    
+    <hr/>
+    <? _debug($resource) ?>
     
   </body>
 </html>
