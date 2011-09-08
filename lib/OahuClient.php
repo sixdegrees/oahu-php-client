@@ -1,5 +1,23 @@
 <?php
  
+if (!function_exists(http_parse_headers)) {
+  function http_parse_headers($header) {
+    $retVal = array();
+    $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $header));
+    foreach( $fields as $field ) {
+      if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
+        $match[1] = preg_replace('/(?<=^|[\x09\x20\x2D])./e', 'strtoupper("\0")', strtolower(trim($match[1])));
+        if( isset($retVal[$match[1]]) ) {
+          $retVal[$match[1]] = array($retVal[$match[1]], $match[2]);
+        } else {
+          $retVal[$match[1]] = trim($match[2]);
+        }
+      }
+    }
+    return $retVal;
+  }
+}
+
 class OahuClient {
     
     public $oahuHost;
@@ -33,11 +51,11 @@ class OahuClient {
     
     // Movies API
     
-    public function listMovies($filter=null) {
+    public function listMovies($filter=null, $params=array()) {
       if (!in_array($filter, self::$projectFilters)) {
         $filter = null;
       }
-      return $this->_get("projects/" . $filter);
+      return $this->_get("projects/" . $filter, $params);
     }
     
     public function getProject($projectId) {
@@ -122,7 +140,6 @@ class OahuClient {
         } else {
           return false;
         }
-        
       } else {
         throw new Exception("The Resource " . $resourceId . " is not editable");
       }
@@ -189,7 +206,7 @@ class OahuClient {
     private function _put($path, $data, $headers=array()) {
       $res =  $this->_exec("PUT", $path, $data, $headers);
       return $res['body'];
-     }
+    }
     
     private function _exec($type, $path, $params = array(), $headers = array()) {
         $params["consumer_id"] = $this->consumerId;
@@ -220,13 +237,19 @@ class OahuClient {
               break;
         }
         
+        curl_setopt($s, CURLOPT_HEADER, true);
+        curl_setopt($s, CURLINFO_HEADER_OUT, 1);
         curl_setopt($s, CURLOPT_TIMEOUT, 3);
         curl_setopt($s, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($s, CURLOPT_HTTPHEADER, $headers);
+        
         $out = curl_exec($s);
         $status = curl_getinfo($s, CURLINFO_HTTP_CODE);
+        $response = curl_getinfo($s);
         curl_close($s);
-        $body = json_decode($out);
+        $response_headers = http_parse_headers(substr($out, 0, $response['header_size']));
+        $response_body = substr($out, -$response['download_content_length']);
+        $body = json_decode($response_body);
         if (!$body) {
           $body = array();
         }

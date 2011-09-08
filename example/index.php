@@ -1,14 +1,23 @@
 <?php
 require('config.inc.php');
 
+layout('layouts/application.html.php');
 
-dispatch('/', 'main');
-function main() {
+dispatch('/', 'catalog');
+function catalog() {
   global $oahu;
   $filter = $_GET['filter'];
+  $params = array();
+  if ($_GET['page']) {
+    $params['page'] = $_GET['page'];
+  }
+  if ($_GET['limit']) {
+    $params['limit'] = $_GET['limit'];
+  }
+  $movies = $oahu->listMovies($filter, $params);
   set('filter', $filter);
-  set('moviesList', $oahu->listMovies($filter));
-  return render('main.html.php');
+  set('moviesList', $movies);
+  return render('catalog.html.php');
 }
 
 dispatch_post('/', 'createMovie');
@@ -42,7 +51,7 @@ function showMovie() {
     set('movie', $oahu->getMovie($movie_id));
     set('resources', $oahu->getMovieResources($movie_id, array("limit" => 10)));
     set('publications', $oahu->getMoviePublications($movie_id));
-    return render('movie.html.php');
+    return render('movies/show.html.php');
   } else {
     redirect_to("/");
   }

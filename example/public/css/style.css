@@ -1,0 +1,29 @@
+body {
+  width: 1024px;
+  margin: 0px auto;
+  font-family: "Helvetica";
+}
+
+#main {
+
+}
+
+
+#header {
+  padding: 15px;
+  background-color: black;
+  color: white;
+  height: 50px;
+}
+
+#header a {
+  color: yellow;
+}
+
+#account_picture {
+
+}
+ 
+#account_box {
+  float: right;
+}
