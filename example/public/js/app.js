@@ -1,5 +1,5 @@
 
-var AppInit = function(connectHost) {
+var AppInit = function(connectHost, appId) {
   
   var App = SC.Application.create({
     oahuInit: function() {
@@ -7,6 +7,7 @@ var AppInit = function(connectHost) {
       this.set('yo', 'satlu');
       this.set('userAccount', "undefined YEAH");
       var oahu = Oahu.init({ 
+        appId: appId,
         autoLogin: true, 
         debug: false, 
         remoteUrl: "http://" + connectHost + "/remote.html" 
@@ -17,15 +18,12 @@ var AppInit = function(connectHost) {
 
       oahu.bind('connect', function(msg, data) { console.warn("[Event: " + msg + "]", data); });
       oahu.bind('Oahu:connect:getAccount:success', function(msg, data) {
-        var ua = App.UserAccount.create(data)
-        console.warn("Setting userAccount to " + self.yo, data, ua);
-        self.set('userAccount', ua);
+        self.set('userAccount', App.UserAccount.create(data));
       });
       this.set('oahu', oahu);
     }
   });
   
-
   App.UserAccount = SC.Object.extend({
     fullname: null,
     picture: null
@@ -33,6 +31,7 @@ var AppInit = function(connectHost) {
 
   App.userAccountView = SC.View.extend({
     userAccountBinding: 'App.userAccount'
+    
   });
   
   return App;

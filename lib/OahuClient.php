@@ -26,7 +26,6 @@ class OahuClient {
     public $consumerId;
     public $noCache;
     
-    
     static $modelTypes   = array(
       'Project'   => array('Movie'),
       'Resource'  => array('Image', 'Video', 'ImageList', 'VideoList')

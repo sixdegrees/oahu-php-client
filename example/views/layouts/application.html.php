@@ -11,8 +11,9 @@
       var App;
       $(function() {
         var connectHost = "<?= $config['connect_host'] ?>";
+        var appId = "<?= $config['consumer_id'] ?>";
         console.log("ConnectHost: ", connectHost);
-        App = AppInit(connectHost);
+        App = AppInit(connectHost, appId);
         App.oahuInit();
       });
     </script>
@@ -21,17 +22,20 @@
     <div id="header">
       <script type="text/x-handlebars">
       {{#view App.userAccountView}}
+      {{#if userAccount.fullname }}
       <div id="account_box">
         <div id="user_account">
-          UserName:
           <span class="account_name">{{userAccount.fullname}}</span>
           (<a href="#" class="logout_btn">logout</a>)
-          <img src="{{userAccount.picture}}" class="account_picture" />
+          <img {{bindAttr src="userAccount.picture"}} class="account_picture" />
         </div>
         <div id="user_login" style="display:none">
-          <a href="#" class="login_btn">login</a>
+          <a href="#" class="login_btn" onclick="App.oahu.connect.logout();">login</a>
         </div>
       </div>
+      {{else}}
+      <a href="#" onclick="App.oahu.show('connect');">Login with Oahu Connect</a>
+      {{/if}}
       {{/view}}
       </script>
     </div>
