@@ -16,10 +16,23 @@ var AppInit = function(connectHost, appId) {
         c.connect.getAccount();
       });
 
-      oahu.bind('connect', function(msg, data) { console.warn("[Event: " + msg + "]", data); });
-      oahu.bind('Oahu:connect:getAccount:success', function(msg, data) {
-        self.set('userAccount', App.UserAccount.create(data));
+      oahu.bind('connect', function(msg, data) { 
+        console.warn("[Event: " + msg + "]", data); 
       });
+      
+      oahu.bind('Oahu:connect:login:success', function(msg, data) {
+        if (data) {
+          self.set('userAccount', App.UserAccount.create(data));
+        }
+        else {
+          self.set('userAccount', App.UserAccount.create({offline: true}));
+        }
+      });
+      
+      oahu.bind('Oahu:connect:logout:success', function(msg, data) {
+        self.set('userAccount', App.UserAccount.create({offline: true}));
+      });
+      
       this.set('oahu', oahu);
     }
   });

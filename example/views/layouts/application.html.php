@@ -23,18 +23,22 @@
       <script type="text/x-handlebars">
       {{#view App.userAccountView}}
       {{#if userAccount.fullname }}
+      <div id="user_login">
+        <a href="#" class="login_btn" onclick="App.oahu.show('connect')">Connection Status</a>
+      </div>
       <div id="account_box">
         <div id="user_account">
           <span class="account_name">{{userAccount.fullname}}</span>
-          (<a href="#" class="logout_btn">logout</a>)
+          (<a href="#" class="logout_btn" onclick="App.oahu.connect.logout();">logout</a>)
           <img {{bindAttr src="userAccount.picture"}} class="account_picture" />
-        </div>
-        <div id="user_login" style="display:none">
-          <a href="#" class="login_btn" onclick="App.oahu.connect.logout();">login</a>
         </div>
       </div>
       {{else}}
-      <a href="#" onclick="App.oahu.show('connect');">Login with Oahu Connect</a>
+        {{#if userAccount.offline}}
+        <a href="#" onclick="App.oahu.show('connect');">Login with Oahu Connect</a>
+        {{else}}
+        <span>Connecting to Oahu...</span>
+        {{/if}}
       {{/if}}
       {{/view}}
       </script>
