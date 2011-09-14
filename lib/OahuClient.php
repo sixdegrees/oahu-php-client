@@ -1,6 +1,6 @@
 <?php
  
-if (!function_exists(http_parse_headers)) {
+if (!function_exists('http_parse_headers')) {
   function http_parse_headers($header) {
     $retVal = array();
     $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $header));
