@@ -15,11 +15,22 @@
       <td>Description:</td>
       <td><textarea name="resource[description]" cols="60" rows="5"><?= $resource->description ?></textarea></td>
     </tr>
+    <? if ($images): ?>
+    <tr>
+      <td>Image List</td>
+      <td>
+        <ul>
+        <? foreach ($images as $image) :?>
+        <li><input type="checkbox" name="resource[image_ids][]" value="<?= $image->_id ?>" <? if (in_array($image->_id, $resource->image_ids)): ?>checked='checked'<? endif ?> /> <?= $image->name ?></li>
+        <? endforeach ?>
+        </ul>
+      </td>
+    </tr>
+    <? endif ?>
     <tr>
       <td>&nbsp;</td>
       <td><input type="submit" value="update" ></td>
     </tr>
-    
   </table>
   
 </form>

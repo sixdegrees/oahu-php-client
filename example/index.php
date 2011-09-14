@@ -75,7 +75,11 @@ function showResource() {
   $movie_id = params('id');
   $resource_id = params('resource_id');
   $resource = $oahu->getMovieResource($movie_id, $resource_id);
+  if ($resource->_type == "Resources::ImageList") {
+    $images = $oahu->getMovieResources($movie_id, array("type" => "Image"));
+  }
   set('resource', $resource);
+  set('images', $images);
   return render('resource.html.php');
   if ($resource) {
     return render('resource.html.php');

@@ -130,8 +130,11 @@ class OahuClient {
     
     public function updateMovieResource($projectId, $resourceId, $resourceData) {
       $res = $this->getMovieResource($projectId, $resourceId);
+      if (!$res) {
+        throw new Exception("Resource " . $resourceId . " not found");
+      }
       if ($res->can_edit) {
-        $updateData = self::_makeModel("Resource", $resourceData, array("name", "description"));
+        $updateData = self::_makeModel($res->_type, $resourceData, array("name", "description", "image_ids", "video_ids"));
         if (count($updateData) > 0) {
           return $this->_put("projects/" . $projectId . "/resources/" . $resourceId, array(
             "resource" => $updateData
