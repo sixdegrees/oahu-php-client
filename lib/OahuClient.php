@@ -216,7 +216,7 @@ class OahuClient {
         $params["format"] = "json";
         
         $s = curl_init();
-        $headers[] = "Content-type: application/json";
+        $headers[] = "Content-Type: application/json";
         
         if ($this->noCache) {
           $headers[] = "Cache-Control: no-cache";
@@ -250,7 +250,7 @@ class OahuClient {
         $response = curl_getinfo($s);
         curl_close($s);
         $response_headers = http_parse_headers(substr($out, 0, $response['header_size']));
-        $response_body = substr($out, -$response['download_content_length']);
+        $response_body = substr($out, $response['header_size']);
         $body = json_decode($response_body);
         if (!$body) {
           $body = array();
