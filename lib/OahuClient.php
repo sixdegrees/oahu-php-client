@@ -170,7 +170,10 @@ class OahuClient {
     // Helpers
     
     private static function _resourceModel($resourceType) {
-      if (in_array("Resources::" . $resourceType, array_keys(self::$modelFields))) {
+      if (in_array($resourceType, array_keys(self::$modelFields))) {
+        return $resourceType;
+      }
+      else if (in_array("Resources::" . $resourceType, array_keys(self::$modelFields))) {
         return "Resources::" . $resourceType;
       } else {
         return "Resource";
