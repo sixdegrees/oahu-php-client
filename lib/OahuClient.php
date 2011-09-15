@@ -116,14 +116,9 @@ class OahuClient {
       if (!in_array($resourceType, self::$modelTypes["Resource"])) {
         throw new Exception("ResourceType " . $resourceType . " does not exist");
       }
-      if (in_array("Resources::" . $resourceType, array_keys(self::$modelFields))) {
-        $resourceModel = "Resources::" . $resourceType;
-      } else {
-        $resourceModel = "Resource";
-      }
       return $this->_post("projects/". $projectId . '/resources', array(
         "_type"   => $resourceType,
-        "resource" => self::_makeModel($resourceModel, $resourceData)
+        "resource" => self::_makeModel(self::_resourceModel($resourceType), $resourceData)
         )
       );
     }
@@ -134,7 +129,7 @@ class OahuClient {
         throw new Exception("Resource " . $resourceId . " not found");
       }
       if ($res->can_edit) {
-        $updateData = self::_makeModel($res->_type, $resourceData, array("name", "description", "image_ids", "video_ids"));
+        $updateData = self::_makeModel(self::_resourceModel($res->_type), $resourceData, array("name", "description", "image_ids", "video_ids"));
         if (count($updateData) > 0) {
           return $this->_put("projects/" . $projectId . "/resources/" . $resourceId, array(
             "resource" => $updateData
@@ -173,6 +168,14 @@ class OahuClient {
     
     
     // Helpers
+    
+    private static function _resourceModel($resourceType) {
+      if (in_array("Resources::" . $resourceType, array_keys(self::$modelFields))) {
+        return "Resources::" . $resourceType;
+      } else {
+        return "Resource";
+      }
+    }
     
     private static function _makeModel($modelType, $data=array(), $only=null) {
       $keys = array_intersect(self::$modelFields[$modelType], array_keys($data));
