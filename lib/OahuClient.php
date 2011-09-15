@@ -187,13 +187,12 @@ class OahuClient {
       }
       $model = array();
       foreach ($keys as $k) {
-        if ($data[$k]) {
+        if (array_key_exists($k, $data)) {
           if (is_string($data[$k])) {
             $model[$k] = stripslashes($data[$k]);
           } else {
             $model[$k] = $data[$k];
           }
-          
         }
       }
       return $model;
