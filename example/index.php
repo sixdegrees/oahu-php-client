@@ -6,7 +6,11 @@ layout('layouts/application.html.php');
 dispatch('/', 'catalog');
 function catalog() {
   global $oahu;
-  $filter = $_GET['filter'];
+  if ($_GET['filter']) {
+    $filter = $_GET['filter'];
+  } else {
+    $filter = null;
+  }
   $params = array();
   if ($_GET['page']) {
     $params['page'] = $_GET['page'];
