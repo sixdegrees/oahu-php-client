@@ -1,12 +1,15 @@
 <?php
 require('config.inc.php');
-
 layout('layouts/application.html.php');
 
 dispatch('/', 'catalog');
 function catalog() {
   global $oahu;
-  $filter = $_GET['filter'];
+  if ($_GET['filter']) {
+    $filter = $_GET['filter'];
+  } else {
+    $filter = null;
+  }
   $params = array();
   if ($_GET['page']) {
     $params['page'] = $_GET['page'];
@@ -97,6 +100,40 @@ function updateResource() {
   redirect_to("/movies/" . $movie_id . "/resources/" . $resource_id);
 }
 
+dispatch_post('/session', 'createSession');
+function createSession(){
+  global $oahu;
+  if($oahu->validateUserAccount($_POST)) {
+    $_SESSION['oahu_id'] = $_POST['_id'];
+    
+    $current_user = User::find_by_oahu_id($_SESSION['oahu_id']);
+    if (!$current_user) {
+      $current_user = User::create(array('oahu_id' => $_SESSION['oahu_id']));
+    }
+    
+    $_SESSION['user_id'] = $current_user->id;
+    
+    return $current_user->to_json();
+  } else {
+    return json_encode(array('error'=>'invalid_signature'));
+  }
+  
+}
+
+dispatch_post('/user', 'updateUser');
+function updateUser() {
+  global $current_user;
+  $current_user->name = $_POST['name'];
+  $current_user->email = $_POST['email'];
+  $current_user->save();
+  return $current_user->to_json();
+}
+
+dispatch_delete('/session','deleteSession');
+function deleteSession(){
+  session_destroy();
+  return json_encode(array('message'=>'session_cleared'));
+}
 
 run();
 ?>

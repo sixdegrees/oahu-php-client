@@ -48,6 +48,29 @@ class OahuClient {
         $this->noCache        = $noCache;
     }
     
+
+    // User account APIs
+    
+    public function validateUserAccount($account_object=null){
+
+      if($account_object==null){
+        return false;
+      }
+      
+      $at = $account_object['access_token'];
+      $sd = $account_object['sig_date'];
+      $ai = $account_object['_id'];
+      $sc = $this->consumerSecret;
+      
+      $str = implode('-', array($at, $sd, $ai, $sc));
+      
+      if(md5($str)==$account_object['sig']){
+        return true;
+      } else {
+        return false;
+      }
+    }
+     
     // Movies API
     
     public function listMovies($filter=null, $params=array()) {
