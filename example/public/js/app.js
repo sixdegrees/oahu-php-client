@@ -1,3 +1,8 @@
+OahuConfig = {
+  host:'js.oahu.dev',
+  connect_host:'connect.oahu.dev',
+  consumer_id:'CONSUMER_ID',
+}
 
 var App;
 
