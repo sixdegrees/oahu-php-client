@@ -97,6 +97,28 @@ function updateResource() {
   redirect_to("/movies/" . $movie_id . "/resources/" . $resource_id);
 }
 
+dispatch_post('/session', 'createSession');
+function createSession(){
+  global $oahu;
+  $sig_valid = $oahu->validateUserAccount($_POST);
+  if($sig_valid) {
+    $_SESSION['oahu_id'] = $_POST['_id'];
+    // Get user account in YOUR DB...
+    $user_account = array("name" => "BOB", "id" => 123);
+    $_SESSION['website_name'] = "BOB";
+    
+    return json_encode($user_account);
+  } else {
+    return json_encode(array('error'=>'invalid_signature'));
+  }
+  
+}
+
+dispatch_delete('/session','deleteSession');
+function deleteSession(){
+  session_destroy();
+  return json_encode(array('message'=>'session_cleared'));
+}
 
 run();
 ?>
