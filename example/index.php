@@ -1,6 +1,5 @@
 <?php
 require('config.inc.php');
-
 layout('layouts/application.html.php');
 
 dispatch('/', 'catalog');

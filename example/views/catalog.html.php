@@ -1,12 +1,11 @@
-<p>
-  <a href="./index.php">all</a>
-  &nbsp;|&nbsp;
-  <? foreach(OahuClient::$projectFilters as $f) : ?>
-  <a href="<?= url_for('/', array('filter' => $f)) ?>"><?= $f ?></a>
-  &nbsp;|&nbsp;
-  <? endforeach ?>
-</p>
-
+<div class='filter'>
+	<ul class='pills'>
+	  <li><a href="./index.php">all</a></li>
+	  <? foreach(OahuClient::$projectFilters as $f) : ?>
+	  <li><a href="<?= url_for('/', array('filter' => $f)) ?>"><?= $f ?></a></li>
+	  <? endforeach ?>
+	</li>
+</div>
 <h1>List Movies <?= $filter ?></h1>
 <table width="100%" border="1">
   <tr>
@@ -25,6 +24,14 @@
     <td><?= $movie->release_date ?></td>
     <td><?= $movie->created_at ?></td>
     <td><?= $movie->updated_at ?></td>
+    <td><button class='btn oahu_share' href='#'
+			data-oahu-type='project'
+			data-oahu-id='<?= $movie->_id ?>'
+			data-oahu-link='http://mystudio.com/movies/<?= $movie->_id  ?>.html'
+			data-oahu-name='<?= $movie->title ?>'
+			data-oahu-caption='Project Subtitle'
+			data-oahu-description='<?= $movie->description ?>'
+		>Share</button></td>
   </tr>
   <?php endforeach; ?>
 </table>
@@ -49,7 +56,6 @@
       <td>&nbsp;</td>
       <td><input type="submit" value="create"></td>
     </tr>
-    
   </table>
   
 </form>
