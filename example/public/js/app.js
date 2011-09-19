@@ -1,9 +1,3 @@
-OahuConfig = {
-  host:'js.oahu.dev',
-  connect_host:'connect.oahu.dev',
-  consumer_id:'CONSUMER_ID',
-}
-
 var App;
 
 $(function() {
@@ -17,6 +11,7 @@ $(function() {
   // });
   // 
   $('.oahu_share').addClass('disabled');
+  
   var user_account;
   
   Oahu.init({
@@ -25,6 +20,8 @@ $(function() {
     remoteUrl:'http://'+OahuConfig.connect_host+'/remote.html'
   },function(c){
     $('.oahu_share').removeClass('disabled');
+    $('#website_connect_btn').removeClass('disabled');
+    
     // debug('>> Oahu Init Callback',c);
     // var account = c.connect.getAccount();
     // debug('>> Oahu Account',account);
@@ -61,6 +58,7 @@ $(function() {
     user_account=null;
     addAlert('Logged out','error');
   }
+  
   function onFacebookInfos(message,data){
     $('#user_sig').attr('value',user_account.sig);
     $('#oahu_id').attr('value',user_account._id);
@@ -98,7 +96,14 @@ $(function() {
   
   $('#website_connect_btn').live('click',function(){
     $.post('./?/session',user_account,function(response){
-      $('#website_name span').html(response.name)
+      if (response.oahu_id) {
+        $('#website_name span').html(response.name)
+        $('#website_user_id span').html(response.id)
+        $('#website_oahu_id span').html(response.oahu_id)
+        $('.website_account').show();
+        $('#website_disconnect_btn').show();
+        $('#website_connect_btn').hide();
+      }
     },'json');
   });
   
@@ -107,11 +112,19 @@ $(function() {
       type: 'DELETE',
       url: './?/session',
       success: function(response){
-        console.log(response);
-        $('#disconnect_btn').hide();
+        $('.website_account').hide();
+        $('#website_disconnect_btn').hide();
+        $('#website_connect_btn').show();
       },
       dataType: 'json'
     });
+  });
+  
+  $("#website_register_btn").live('click', function() {
+    $("#user_form").modal({
+	      backdrop:'static',
+	      closeOnEscape:true
+	    }).modal("show");
   });
   
   $('.oahu_share:not(.disabled)').live('click',function(e) {

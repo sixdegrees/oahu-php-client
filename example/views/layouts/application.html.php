@@ -1,4 +1,5 @@
 <?php global $config; ?>
+<?php global $current_user; ?>
 <!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -10,13 +11,19 @@
 
     <script src="public/js/bootstrap-alerts.js" type="text/javascript" charset="utf-8"></script>
     <script src="public/js/bootstrap-dropdown.js" type="text/javascript" charset="utf-8"></script>
-    <script src="public/js/bootstrap-modal.js" type="text/javascript" charset="utf-8"></script>
     <script src="public/js/bootstrap-twipsy.js" type="text/javascript" charset="utf-8"></script>
     <script src="public/js/bootstrap-popover.js" type="text/javascript" charset="utf-8"></script>
     <script src="public/js/bootstrap-scrollspy.js" type="text/javascript" charset="utf-8"></script>
     <script src="public/js/bootstrap-tabs.js" type="text/javascript" charset="utf-8"></script>
 
+    <script src="public/js/bootstrap-modal.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?= $config['oahu_js_url'] ?>"></script>
+    <script>
+    var OahuConfig = <?= json_encode(array(
+      "connect_host"  => $config['connect_host'],
+      "consumer_id"   => $config['consumer_id']
+    )); ?>
+</script>
     <script src="public/js/app.js"></script>
   </head>
   <body>
@@ -44,20 +51,38 @@
       </div>
     </div>
     <div class="container">
+      <div id="user_form" class="modal hide fade">
+        <form action="/?/user" method="post">
+          <input type="text" name="name" value="" id="website_user_name" />
+          <input type="text" name="email" value="" id="website_user_email" />
+          <input type="sumbit" name="update" value="update" />
+        </form>
+      </div>
       <div class='hero-unit'>
-        <h3 id="oahu_id">User ID: <?= $_SESSION['oahu_id']; ?></h3>
-        <h4 id="website_name">Website Username : <span><?= $_SESSION['website_name']; ?></span></h4>
-        <div class='logged_in'>
-          <?php if(!$_SESSION['website_name']): ?>
-            <button class='btn secondary' id="website_connect_btn">Authenticate with Oahu</button>
-          <?php endif; ?>
+        <div class="website_account" style="<? if (!$current_user): ?>display: none;<? endif ?>">
+        <h3 id="website_oahu_id">
+          User OahuID: 
+          <span><?= $current_user ? $current_user->oahu_id : "-" ?></span>
+        </h3>
+        <h3 id="website_user_id">
+          User ID: 
+          <span><?= $current_user ? $current_user->id : "-" ?></span>
+        </h3>
+        <h4 id="website_name">
+          Website User Name : 
+          <span><?= $current_user ? $current_user->name : "-" ?></span>
+        </h4>
         </div>
-        <?php if($_SESSION['website_name']): ?>
-          <button class='btn secondary' id="website_disconnect_btn">Disconnect from Site</button>
-        <?php endif; ?>
+        <button class='btn secondary disabled' id="website_connect_btn" style="<? if ($current_user): ?>display: none;<? endif ?>">Authenticate with Oahu</button>
+        <button class='btn secondary' id="website_disconnect_btn" style="<? if (!$current_user): ?>display: none;<? endif ?>">Disconnect from Site</button>
+        <? if ($current_user && !$current_user->email): ?>
+        <button class='btn primary' id="website_register_btn">Register Account</button>
+        <? endif ?>
       </div>
       <div id="main"><?= $content ?></div>
-      <div id="footer"></div>
+      <div id="footer">
+        <? _debug($current_user); ?>
+      </div>
     </div>
   </body>
   

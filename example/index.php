@@ -103,18 +103,30 @@ function updateResource() {
 dispatch_post('/session', 'createSession');
 function createSession(){
   global $oahu;
-  $sig_valid = $oahu->validateUserAccount($_POST);
-  if($sig_valid) {
+  if($oahu->validateUserAccount($_POST)) {
     $_SESSION['oahu_id'] = $_POST['_id'];
-    // Get user account in YOUR DB...
-    $user_account = array("name" => "BOB", "id" => 123);
-    $_SESSION['website_name'] = "BOB";
     
-    return json_encode($user_account);
+    $current_user = User::find_by_oahu_id($_SESSION['oahu_id']);
+    if (!$current_user) {
+      $current_user = User::create(array('oahu_id' => $_SESSION['oahu_id']));
+    }
+    
+    $_SESSION['user_id'] = $current_user->id;
+    
+    return $current_user->to_json();
   } else {
     return json_encode(array('error'=>'invalid_signature'));
   }
   
+}
+
+dispatch_post('/user', 'updateUser');
+function updateUser() {
+  global $current_user;
+  $current_user->name = $_POST['name'];
+  $current_user->email = $_POST['email'];
+  $current_user->save();
+  return $current_user->to_json();
 }
 
 dispatch_delete('/session','deleteSession');
