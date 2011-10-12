@@ -21,32 +21,22 @@ $(function() {
   function addAlert(message, kind){
     alert = $('<div>').addClass('alert-message block-message fade in '+kind).html(message).data('alert','alert').prependTo('#login .row .span8');
   }
-  function setLoginStatus() {
-    if (user_account && user_account.fullname) {
+
+  function onAccountStatus(message,data){
+    if(data) {
+      user_account = data;
+      addAlert('Welcome, ' + data.name, 'warning');
+      $('#user_name').html(data.name);
+      $('#user_picture').html($('<img>').attr('src',data.picture));
       $('.logged_in').show();
       $('.logged_out').hide();
     } else {
+      addAlert('Logged out','error');
       $('.logged_in').hide();
-      $('.logged_out').show();      
+      $('.logged_out').show();
     }
-  }
-
-  function onLoginSuccess(message,data){
-    if(data) {
-      user_account = data;
-    } else {
-      return false;
-    }
-    addAlert('Welcome, ' + data.fullname, 'warning');
-    $('#user_name').html(data.fullname);
-    $('#user_picture').html($('<img>').attr('src',data.picture));
   };
-  
-  function onLogoutSuccess(message,data){
-    user_account=null;
-    addAlert('Logged out','error');
-  };
-  
+    
   function onFacebookInfos(message,data){
     $('#user_sig').attr('value',user_account.sig);
     $('#oahu_id').attr('value',user_account._id);
@@ -57,10 +47,7 @@ $(function() {
   //Bind on ALL connect events,
   //oahu.bind('start',onConnect);
   //Bind on a specific login success event,
-  Oahu.bind('Oahu:connect:login:success',  onLoginSuccess);
-  Oahu.bind('Oahu:connect:login:success',  setLoginStatus);
-  Oahu.bind('Oahu:connect:logout:success', onLogoutSuccess);
-  Oahu.bind('Oahu:connect:logout:success',  setLoginStatus);
+  Oahu.bind('Oahu:account:success',  onAccountStatus);
   Oahu.bind('Facebook:connect:getInfos:success',onFacebookInfos);
   //oahu.bind('Oahu:connect', function() { setTimeout(setLoginStatus.apply(this), 10); });
 
