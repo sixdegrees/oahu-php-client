@@ -17,10 +17,21 @@
   visibility: hidden;
 }
 
-section{
+section {
   padding-top:60px;
 }
 
 .logged_in {
   list-style-type: none;
+}
+
+#debug_bar {
+  padding: 10px;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background: #ccc;
+  opacity: 0.8;
+  border-top: solid 2px #999;
 }

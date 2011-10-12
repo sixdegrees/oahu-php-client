@@ -1,30 +1,17 @@
-var App;
-
+var user_account;
+  
 $(function() {
   
-  // Oahu.init({
-  //   consumerId  : OahuConfig.consumer_id,
-  //   autoLogin   : true,
-  //   debug       : true,
-  //   success     : function(oahu){ },
-  //   error       : function(callback){ }
-  // });
-  // 
   $('.oahu_share').addClass('disabled');
   
-  var user_account;
   
   Oahu.init({
-    appId:OahuConfig.consumer_id,
+    environment: OahuConfig.environment,
+    appId: OahuConfig.appId,
     debug: true,
-    remoteUrl:'http://'+OahuConfig.connect_host+'/remote.html'
-  },function(c){
+  }, function(c) {
     $('.oahu_share').removeClass('disabled');
     $('#website_connect_btn').removeClass('disabled');
-    
-    // debug('>> Oahu Init Callback',c);
-    // var account = c.connect.getAccount();
-    // debug('>> Oahu Account',account);
   });
 
   function onConnect(message,data){
@@ -50,22 +37,23 @@ $(function() {
     } else {
       return false;
     }
-    addAlert('Welcome, '+data.fullname, 'warning');
+    addAlert('Welcome, ' + data.fullname, 'warning');
     $('#user_name').html(data.fullname);
     $('#user_picture').html($('<img>').attr('src',data.picture));
-  }
+  };
+  
   function onLogoutSuccess(message,data){
     user_account=null;
     addAlert('Logged out','error');
-  }
+  };
   
   function onFacebookInfos(message,data){
     $('#user_sig').attr('value',user_account.sig);
     $('#oahu_id').attr('value',user_account._id);
     $('#fullname').attr('value',data.name);
     $('#email').attr('value',data.email);
-  }
- 
+  };
+  
   //Bind on ALL connect events,
   //oahu.bind('start',onConnect);
   //Bind on a specific login success event,
@@ -95,7 +83,7 @@ $(function() {
   // $('.topbar').scrollSpy();
   
   $('#website_connect_btn').live('click',function(){
-    $.post('./?/session',user_account,function(response){
+    $.post('./?/session', user_account, function(response){
       if (response.oahu_id) {
         $('#website_name span').html(response.name)
         $('#website_user_id span').html(response.id)
@@ -121,10 +109,11 @@ $(function() {
   });
   
   $("#website_register_btn").live('click', function() {
-    $("#user_form").modal({
-	      backdrop:'static',
-	      closeOnEscape:true
-	    }).modal("show");
+    Oahu.connect.getInfos("Facebook");
+    // $("#user_form").modal({
+    //        backdrop:'static',
+    //        closeOnEscape:true
+    //      }).modal("show");
   });
   
   $('.oahu_share:not(.disabled)').live('click',function(e) {

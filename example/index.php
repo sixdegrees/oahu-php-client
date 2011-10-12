@@ -5,16 +5,16 @@ layout('layouts/application.html.php');
 dispatch('/', 'catalog');
 function catalog() {
   global $oahu;
-  if ($_GET['filter']) {
+  if (isset($_GET['filter'])) {
     $filter = $_GET['filter'];
   } else {
     $filter = null;
   }
   $params = array();
-  if ($_GET['page']) {
+  if (isset($_GET['page'])) {
     $params['page'] = $_GET['page'];
   }
-  if ($_GET['limit']) {
+  if (isset($_GET['limit'])) {
     $params['limit'] = $_GET['limit'];
   }
   $movies = $oahu->listMovies($filter, $params);
@@ -27,6 +27,7 @@ dispatch_post('/', 'createMovie');
 function createMovie() {
   global $oahu;
   $movie = $oahu->createMovie($_POST['project']);
+  $oahu->connection->flushCache();
   if ($movie) {
     redirect_to('/movies/' . $movie->_id);
   } else {
@@ -40,6 +41,7 @@ function updateMovie() {
   $movie_id = params("id");
   if ($movie_id) {
     $oahu->updateMovie($movie_id, $_POST["project"]);
+    $oahu->connection->flushCache();
     redirect_to('/movies/' . $movie_id);
   } else {
     redirect_to('/');
@@ -52,7 +54,8 @@ function showMovie() {
   $movie_id = params("id");
   if ($movie_id) {
     set('movie', $oahu->getMovie($movie_id));
-    set('resources', $oahu->getMovieResources($movie_id, array("limit" => 10)));
+    $resources = $oahu->getMovieResources($movie_id, array("limit" => 10));
+    set('resources', $resources);
     set('publications', $oahu->getMoviePublications($movie_id));
     return render('movies/show.html.php');
   } else {
@@ -64,6 +67,7 @@ dispatch_post('/movies/:id/resources', 'createResource');
 function createResource() {
   global $oahu;
   $movie_id = params('id');
+  $oahu->connection->flushCache();
   if ($movie_id) {
     $oahu->createMovieResource($movie_id, $_POST["_type"], $_POST["resource"]);
     redirect_to("/movies/" . $movie_id);
@@ -97,6 +101,7 @@ function updateResource() {
   $movie_id = params('id');
   $resource_id = params('resource_id');
   $oahu->updateMovieResource($movie_id, $resource_id, $_POST['resource']);
+  $oahu->connection->flushCache();
   redirect_to("/movies/" . $movie_id . "/resources/" . $resource_id);
 }
 
@@ -104,15 +109,12 @@ dispatch_post('/session', 'createSession');
 function createSession(){
   global $oahu;
   if($oahu->validateUserAccount($_POST)) {
-    $_SESSION['oahu_id'] = $_POST['_id'];
-    
+    $_SESSION['oahu_id'] = $_POST['_id']; 
     $current_user = User::find_by_oahu_id($_SESSION['oahu_id']);
     if (!$current_user) {
       $current_user = User::create(array('oahu_id' => $_SESSION['oahu_id']));
     }
-    
     $_SESSION['user_id'] = $current_user->id;
-    
     return $current_user->to_json();
   } else {
     return json_encode(array('error'=>'invalid_signature'));
@@ -134,6 +136,13 @@ function deleteSession(){
   session_destroy();
   return json_encode(array('message'=>'session_cleared'));
 }
+
+dispatch_post('/flush_cache', 'flushCache');
+function flushCache() {
+  global $oahu;
+  $oahu->connection->flushCache();
+  redirect_to("/");
+};
 
 run();
 ?>

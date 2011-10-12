@@ -1,26 +1,26 @@
-<a href="<?= url_for('/') ?>"><< Back to Movies list...</a>
+<a href="<?php echo url_for('/') ?>"><< Back to Movies list...</a>
 
-<h1><?= $movie->title ?></h1>
-<h2>Release: <?= $movie->release_date ?></h2>
+<h1><?php echo $movie->title ?></h1>
+<h2>Release: <?php echo $movie->release_date ?></h2>
 
-<?= $movie->synopsis ?>
+<?php echo $movie->synopsis ?>
 
 <hr>
 <h2>Update Movie</h2>
-<form action="<?= url_for("/movies/" . $movie->_id) ?>" method="POST" accept-charset="UTF-8">
+<form action="<?php echo url_for("/movies/" . $movie->_id) ?>" method="POST" accept-charset="UTF-8">
   <table>
-    <input type="hidden" name="_id" value="<?= $movie->_id ?>" />
+    <input type="hidden" name="_id" value="<?php echo $movie->_id ?>" />
     <tr>
       <td>Title: </td>
-      <td><input type="text" name="project[title]" value="<?= $movie->title ?>" size="80"></td>
+      <td><input type="text" name="project[title]" value="<?php echo $movie->title ?>" size="80"></td>
     </tr>
     <tr>
       <td>Synopsis: </td>
-      <td><textarea name="project[synopsis]" cols="60" rows="5"><?= $movie->synopsis ?></textarea></td>
+      <td><textarea name="project[synopsis]" cols="60" rows="5"><?php echo $movie->synopsis ?></textarea></td>
     </tr>
     <tr>
       <td>Release Date:</td>
-      <td><input type="text" name="project[release_date]" value="<?= $movie->release_date ?>" size="36"></td>
+      <td><input type="text" name="project[release_date]" value="<?php echo $movie->release_date ?>" size="36"></td>
     </tr>
     <tr>
       <td>&nbsp;</td>
@@ -32,8 +32,8 @@
 
 <hr>
 
-<h2><?= count($resources) ?> Resources</h2>
-<form action='<?= url_for("/movies/" . $movie->_id . "/resources")?>' method='POST' accept-charset="UTF-8">
+<h2><?php echo count($resources) ?> Resources</h2>
+<form action='<?php echo url_for("/movies/" . $movie->_id . "/resources")?>' method='POST' accept-charset="UTF-8">
 <table width="100%" border="1">
   <tr>
     <th colspan='2'>Preview</th>
@@ -48,39 +48,39 @@
   <?php foreach($resources as $resource) : ?>
   <tr>
     <td>
-      <? if ($resource->_type == "Resources::Image") : ?>
-      <input type="checkbox" value="<?= $resource->_id ?>" name="resource[image_ids][]" />
-      <? endif ?>
-      <? if ($resource->_type == "Resources::Video") : ?>
-      <input type="checkbox" value="<?= $resource->_id ?>" name="resource[video_ids][]" />
-      <? endif ?>
+      <?php if ($resource->_type == "Resources::Image") : ?>
+      <input type="checkbox" value="<?php echo $resource->_id ?>" name="resource[image_ids][]" />
+      <?php endif ?>
+      <?php if ($resource->_type == "Resources::Video") : ?>
+      <input type="checkbox" value="<?php echo $resource->_id ?>" name="resource[video_ids][]" />
+      <?php endif ?>
     </td>
     <td align="center">
-      <? if ($resource->_type == "Resources::Image") : ?>
-      <img src="<?= $resource->paths->thumb ?>.jpg" />
-      <? endif?>
+      <?php if ($resource->_type == "Resources::Image") : ?>
+      <img src="<?php echo $resource->paths->thumb ?>.jpg" />
+      <?php endif?>
     </td>
-    <td><a href="<?= url_for("/movies/" . $movie->_id . "/resources/" . $resource->_id) ?>"><?= $resource->_id ?></a></td>
-    <td><?= $resource->slug ?></td>
-    <td><?= $resource->_type ?></td>
-    <td><?= $resource->name ?></td>
-    <td><?= $resource->description ?></td>
-    <td><?= $resource->created_at ?></td>
-    <td><?= $resource->updated_at ?></td>
+    <td><a href="<?php echo url_for("/movies/" . $movie->_id . "/resources/" . $resource->_id) ?>"><?php echo $resource->_id ?></a></td>
+    <td><?php echo $resource->slug ?></td>
+    <td><?php echo $resource->_type ?></td>
+    <td><?php echo $resource->name ?></td>
+    <td><?php echo $resource->description ?></td>
+    <td><?php echo $resource->created_at ?></td>
+    <td><?php echo $resource->updated_at ?></td>
   </tr>
-<? endforeach ?>
+<?php endforeach ?>
 </table>
 
 <hr>
 <h2>Create Resource</h2>
   <table>
-    <input type="hidden" name="project_id" value="<?= $movie->_id ?>" />
+    <input type="hidden" name="project_id" value="<?php echo $movie->_id ?>" />
     <tr>
       <td>Type: </td>
       <td>
         <select name='_type'>
           <?php foreach(OahuClient::$modelTypes['Resource'] as $resourceType) : ?>
-          <option value="<?= $resourceType ?>"><?= $resourceType ?></option>
+          <option value="<?php echo $resourceType ?>"><?php echo $resourceType ?></option>
           <?php endforeach ?>
         </select>
       </td>
@@ -124,14 +124,14 @@
   </tr>
   <?php foreach($publications as $publication) : ?>
   <tr>
-    <td><?= $publication->_id ?></td>
-    <td><?= $publication->slug ?></td>
-    <td><?= $publication->_type ?></td>
-    <td><?= $publication->status ?></td>
-    <td><?= $publication->title ?></td>
-    <td><?= $publication->created_at ?></td>
-    <td><?= $publication->updated_at ?></td>
+    <td><?php echo $publication->_id ?></td>
+    <td><?php echo $publication->slug ?></td>
+    <td><?php echo $publication->_type ?></td>
+    <td><?php echo $publication->status ?></td>
+    <td><?php echo $publication->title ?></td>
+    <td><?php echo $publication->created_at ?></td>
+    <td><?php echo $publication->updated_at ?></td>
   </tr>
-<? endforeach ?>
+<?php endforeach ?>
 </table>
 

@@ -1,12 +1,12 @@
 <div class='filter'>
 	<ul class='pills'>
 	  <li><a href="./index.php">all</a></li>
-	  <? foreach(OahuClient::$projectFilters as $f) : ?>
-	  <li><a href="<?= url_for('/', array('filter' => $f)) ?>"><?= $f ?></a></li>
-	  <? endforeach ?>
+	  <?php foreach(OahuClient::$projectFilters as $f) : ?>
+	  <li><a href="<?php echo url_for('/', array('filter' => $f)) ?>"><?php echo $f ?></a></li>
+	  <?php endforeach ?>
 	</li>
 </div>
-<h1>List Movies <?= $filter ?></h1>
+<h1>List Movies <?php echo $filter ?></h1>
 <table width="100%" border="1">
   <tr>
     <th>ID</th>
@@ -18,19 +18,19 @@
   </tr>
   <?php foreach ($moviesList as $movie) : ?>
   <tr>
-    <td><a href="<?= url_for("/movies/" . $movie->_id) ?>"><?= $movie->_id ?></a></td>
-    <td><?= $movie->title ?></td>
-    <td><?= $movie->synopsis ?></td>
-    <td><?= $movie->release_date ?></td>
-    <td><?= $movie->created_at ?></td>
-    <td><?= $movie->updated_at ?></td>
+    <td><a href="<?php echo url_for("/movies/" . $movie->_id) ?>"><?php echo $movie->_id ?></a></td>
+    <td><?php echo $movie->title ?></td>
+    <td><?php echo $movie->synopsis ?></td>
+    <td><?php echo $movie->release_date ?></td>
+    <td><?php echo $movie->created_at ?></td>
+    <td><?php echo $movie->updated_at ?></td>
     <td><button class='btn oahu_share' href='#'
 			data-oahu-type='project'
-			data-oahu-id='<?= $movie->_id ?>'
-			data-oahu-link='http://mystudio.com/movies/<?= $movie->_id  ?>.html'
-			data-oahu-name='<?= $movie->title ?>'
+			data-oahu-id='<?php echo $movie->_id ?>'
+			data-oahu-link='http://mystudio.com/movies/<?php echo $movie->_id  ?>.html'
+			data-oahu-name='<?php echo $movie->title ?>'
 			data-oahu-caption='Project Subtitle'
-			data-oahu-description='<?= $movie->description ?>'
+			data-oahu-description='<?php echo $movie->description ?>'
 		>Share</button></td>
   </tr>
   <?php endforeach; ?>

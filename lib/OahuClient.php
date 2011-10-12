@@ -18,13 +18,156 @@ if (!function_exists('http_parse_headers')) {
   }
 }
 
+class OahuConnection {
+  
+  public  $oahuHost;
+  public  $clientId;
+  public  $consumerSecret;
+  public  $consumerId;
+  public  $noHttpCache;
+  
+  function OahuConnection($oahuHost, $clientId, $consumerId, $consumerSecret, $noHttpCache, $options) {
+    $this->oahuHost       = $oahuHost;
+    $this->clientId       = $clientId;
+    $this->consumerSecret = $consumerSecret;
+    $this->consumerId     = $consumerId;
+    $this->noHttpCache    = $noHttpCache;
+    if ($options) {
+      if ($options['debug']) {
+        $this->debug = array("http_hits" => 0, "cache_hits" => 0, "cache_misses" => 0);
+      }
+      if ($options['cache']) {
+        $this->cache = new OahuCache($options['cache_host'], $options['cache_port'], $options['cache_expiration']);
+      }
+    }
+  }
+  
+  public function flushCache($delay=0) {
+    if ($this->cache) {
+      $this->cache->flush($delay);
+    }
+    return true;
+  }
+  
+  public function exec($type, $path, $params = array(), $headers = array()) {
+    $params["consumer_id"] = $this->consumerId;
+    $params["consumer_secret"] = $this->consumerSecret;
+    $params["format"] = "json";
+    $headers[] = "Content-Type: application/json";
+    $url = "http://" . $this->oahuHost . "/v1/clients/" . $this->clientId . "/" . $path;
+    
+    if ($this->noHttpCache) {
+      $headers[] = "Cache-Control: no-cache";
+    }
+
+    if ($this->cache && $type == "GET") {
+      $res = $this->_cache_exec($url, $params, $headers);
+    } else {
+      $res = $this->_http_exec($type, $url, $params, $headers);
+    }
+    return (array)$res;
+  }
+  
+  private function _cache_exec($url, $params, $headers) {
+    $ident = $url . "?" . http_build_query($params) . "|" . implode(",", $headers);
+    $ident = md5($ident);
+    
+    $res = $this->cache->get($ident);
+    if ($res) {
+      if ($this->debug) {
+        $this->debug['cache_hits']++;
+      }
+      $res = (array)json_decode($res);
+    } else {
+      if ($this->debug) {
+        $this->debug['cache_misses']++;
+      }
+      $res = $this->_http_exec("GET", $url, $params, $headers);
+      $this->cache->set($ident, json_encode($res));
+    }
+    return $res;
+  }
+  
+  private function _http_exec($type, $url, $params, $headers) {
+    if ($this->debug) {
+      $this->debug['http_hits']++;
+    }
+
+    $s = curl_init();
+
+    switch ($type) {
+        case "GET":
+          curl_setopt($s, CURLOPT_URL, $url . "?" . http_build_query($params));
+          break;
+        case "PUT":
+          curl_setopt($s, CURLOPT_URL, $url);
+          curl_setopt($s, CURLOPT_CUSTOMREQUEST, "PUT");
+          curl_setopt($s, CURLOPT_POSTFIELDS, json_encode($params));
+          break;            
+        case "POST":
+          curl_setopt($s, CURLOPT_URL, $url);
+          curl_setopt($s, CURLOPT_POST, true);
+          curl_setopt($s, CURLOPT_POSTFIELDS, json_encode($params));
+          break;
+    }
+
+    curl_setopt($s, CURLOPT_HEADER, true);
+    curl_setopt($s, CURLINFO_HEADER_OUT, 1);
+    curl_setopt($s, CURLOPT_TIMEOUT, 10);
+    curl_setopt($s, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($s, CURLOPT_HTTPHEADER, $headers);
+
+    $out = curl_exec($s);
+    $status = curl_getinfo($s, CURLINFO_HTTP_CODE);
+    $response = curl_getinfo($s);
+    curl_close($s);
+    $response_headers = http_parse_headers(substr($out, 0, $response['header_size']));
+    $response_body = substr($out, $response['header_size']);
+    $body = json_decode($response_body);
+    if (!$body) {
+      $body = array();
+    }
+
+    $res = array("status" => $status, "body" => $body);
+
+    if ($status >= 400) {
+      throw new Exception(json_encode($res));
+    } else {
+      return $res;
+    }
+  }
+  
+}
+
+class OahuCache {
+  
+  function OahuCache($host="localhost", $port=11211, $expiration=120) {
+    $this->client = new Memcached();
+    $this->client->addServer($host, $port);
+    $this->defaultExpiration = $expiration;
+  }
+  
+  public function flush($delay=0) {
+    $this->client->flush($delay);
+  }
+  
+  public function get($key) {
+    return $this->client->get($key);
+  }
+  
+  public function set($key, $value, $expiration=-1) {
+    if ($expiration == -1) {
+      $expiration = $this->defaultExpiration;
+    }
+    $this->client->set($key, $value, $expiration);
+  }
+  
+}
+
+
 class OahuClient {
     
-    public $oahuHost;
-    public $clientId;
-    public $consumerSecret;
-    public $consumerId;
-    public $noCache;
+    public  $debug = false;
     
     static $modelTypes   = array(
       'Project'   => array('Movie'),
@@ -40,15 +183,17 @@ class OahuClient {
     
     static $projectFilters = array("soon", "live", "featured", "recommended");
     
-    function OahuClient($oahuHost="api.oahu.fr", $clientId, $consumerId, $consumerSecret, $noCache=false) {
-        $this->oahuHost       = $oahuHost;
-        $this->clientId       = $clientId;
-        $this->consumerSecret = $consumerSecret;
-        $this->consumerId     = $consumerId;
-        $this->noCache        = $noCache;
+    function OahuClient($oahuHost="api.oahu.fr", $clientId, $consumerId, $consumerSecret, $noHttpCache=false, $options=array()) {
+      $this->consumerSecret = $consumerSecret;
+      $this->consumerId     = $consumerId;
+      $this->connection     = new OahuConnection($oahuHost, $clientId, $consumerId, $consumerSecret, $noHttpCache, $options);
+      if ($options) {
+        if ($options['debug']) {
+          $this->debug = array();
+        }
+      }
     }
     
-
     // User account APIs
     
     public function validateUserAccount($account_object=null){
@@ -185,11 +330,6 @@ class OahuClient {
       return $this->_get('projects/' . $projectId . '/pub_accounts');
     }
     
-    public function publishResource($resourceId, $pubOptions) {
-      
-    }
-    
-    
     // Helpers
     
     private static function _resourceModel($resourceType) {
@@ -224,72 +364,19 @@ class OahuClient {
     // HTTP Plumming...
     
     private function _get($path, $params=array(), $headers=array()) {
-      $res = $this->_exec("GET", $path, $params, $headers);
+      $res = $this->connection->exec("GET", $path, $params, $headers);
       return $res['body'];
     }
     
     private function _post($path, $data, $headers=array()) {
-      $res = $this->_exec("POST", $path, $data, $headers);
+      $res = $this->connection->exec("POST", $path, $data, $headers);
       return $res['body'];
     }
     
     private function _put($path, $data, $headers=array()) {
-      $res =  $this->_exec("PUT", $path, $data, $headers);
+      $res =  $this->connection->exec("PUT", $path, $data, $headers);
       return $res['body'];
     }
     
-    private function _exec($type, $path, $params = array(), $headers = array()) {
-        $params["consumer_id"] = $this->consumerId;
-        $params["consumer_secret"] = $this->consumerSecret;
-        $params["format"] = "json";
-        
-        $s = curl_init();
-        $headers[] = "Content-Type: application/json";
-        
-        if ($this->noCache) {
-          $headers[] = "Cache-Control: no-cache";
-        }
-        
-        $url = "http://" . $this->oahuHost . "/v1/clients/" . $this->clientId . "/" . $path;
-        switch ($type) {
-            case "GET":
-              curl_setopt($s, CURLOPT_URL, $url . "?" . http_build_query($params));
-              break;
-            case "PUT": 
-              curl_setopt($s, CURLOPT_URL, $url);
-              curl_setopt($s, CURLOPT_CUSTOMREQUEST, "PUT");
-              curl_setopt($s, CURLOPT_POSTFIELDS, json_encode($params));
-              break;            
-            case "POST":
-              curl_setopt($s, CURLOPT_URL, $url);
-              curl_setopt($s, CURLOPT_POST, true);
-              curl_setopt($s, CURLOPT_POSTFIELDS, json_encode($params));
-              break;
-        }
-        
-        curl_setopt($s, CURLOPT_HEADER, true);
-        curl_setopt($s, CURLINFO_HEADER_OUT, 1);
-        curl_setopt($s, CURLOPT_TIMEOUT, 3);
-        curl_setopt($s, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($s, CURLOPT_HTTPHEADER, $headers);
-        
-        $out = curl_exec($s);
-        $status = curl_getinfo($s, CURLINFO_HTTP_CODE);
-        $response = curl_getinfo($s);
-        curl_close($s);
-        $response_headers = http_parse_headers(substr($out, 0, $response['header_size']));
-        $response_body = substr($out, $response['header_size']);
-        $body = json_decode($response_body);
-        if (!$body) {
-          $body = array();
-        }
-        $res = array("status" => $status, "body" => $body);
-        
-        if ($status >= 400) {
-          throw new Exception(json_encode($res));
-        } else {
-          return $res;
-        }
-    }
     
 }

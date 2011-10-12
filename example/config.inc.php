@@ -17,8 +17,10 @@ function _debug($elem) {
 
 $environment = "local";
 
-$config = parse_ini_file('./config/' . $environment . '.ini');
-$oahu = new OahuClient($config['host'], $config['client_id'], $config['consumer_id'], $config['consumer_secret'], $config['no_cache']);
+$config = parse_ini_file('./config/' . $environment . '.ini', true);
+
+
+$oahu = new OahuClient($config['host'], $config['client_id'], $config['consumer_id'], $config['consumer_secret'], $config['no_http_cache'], $config['options']);
 
 
 // initialize ActiveRecord
