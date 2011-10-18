@@ -106,7 +106,7 @@ $(function() {
   $('.oahu_share:not(.disabled)').live('click',function(e) {
     e.preventDefault();
     var link = $(this);
-    Oahu.activity.share('Facebook',{
+    Oahu.ui.share('Facebook',{
       method: 'feed',
       link: link.data('oahu-link'),
       name: link.data('oahu-name'),

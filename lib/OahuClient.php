@@ -115,7 +115,7 @@ class OahuConnection {
 
     curl_setopt($s, CURLOPT_HEADER, true);
     curl_setopt($s, CURLINFO_HEADER_OUT, 1);
-    curl_setopt($s, CURLOPT_TIMEOUT, 10);
+    curl_setopt($s, CURLOPT_TIMEOUT, 60);
     curl_setopt($s, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($s, CURLOPT_HTTPHEADER, $headers);
 
@@ -272,7 +272,7 @@ class OahuClient {
       return $this->_get("projects/" . $projectId . "/resources", $params);
     }
     
-    public function getMoviePublications($projectId, $params=array()) {
+    public function listMoviePublications($projectId, $params=array()) {
       return $this->_get("projects/" . $projectId . "/publications", $params);
     }
     
@@ -326,10 +326,27 @@ class OahuClient {
       return $this->createMovieResource($projetId, "VideoList", $resourceData);
     }
     
-    // Publications API
     
-    public function listPubAccounts($projectId) {
-      return $this->_get('projects/' . $projectId . '/pub_accounts');
+    public function listMoviePubAccounts($projectId) {
+      return $this->listPubAccounts($projectId);
+    }
+    
+    // Client Publications API
+    
+    public function getPubAccount($pubAccountId) {
+      return $this->_get('pub_accounts/' . $pubAccountId);
+    }
+    
+    public function listPubAccounts($projectId, $params=array()) {
+      if (isset($projectId)) {
+        return $this->_get('projects/' . $projectId . '/pub_accounts', $params);
+      } else {
+        return $this->_get('pub_accounts', $params);
+      }
+    }
+    
+    public function listPublications($pubAccountId, $params=array()) {
+      return $this->_get('pub_accounts/' . $pubAccountId . "/publications", $params);
     }
     
     // Helpers

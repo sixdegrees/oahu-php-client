@@ -17,13 +17,15 @@ function catalog() {
   if (isset($_GET['limit'])) {
     $params['limit'] = $_GET['limit'];
   }
+  $pub_accounts = $oahu->listPubAccounts();
   $movies = $oahu->listMovies($filter, $params);
   set('filter', $filter);
   set('moviesList', $movies);
+  set('pub_accounts', $pub_accounts);
   return render('catalog.html.php');
 }
 
-dispatch_post('/', 'createMovie');
+dispatch_post('/movies', 'createMovie');
 function createMovie() {
   global $oahu;
   $movie = $oahu->createMovie($_POST['project']);
@@ -58,7 +60,7 @@ function showMovie() {
     $pub_accounts = $oahu->listPubAccounts($movie_id);
     set('resources', $resources);
     set('pub_accounts', $pub_accounts);
-    set('publications', $oahu->getMoviePublications($movie_id));
+    set('publications', $oahu->listMoviePublications($movie_id));
     return render('movies/show.html.php');
   } else {
     redirect_to("/");
@@ -89,9 +91,8 @@ function showResource() {
   }
   set('resource', $resource);
   set('images', $images);
-  return render('resource.html.php');
   if ($resource) {
-    return render('resource.html.php');
+    return render('resources/show.html.php');
   } else {
     redirect_to('/movies/');
   }
@@ -105,6 +106,23 @@ function updateResource() {
   $oahu->updateMovieResource($movie_id, $resource_id, $_POST['resource']);
   $oahu->connection->flushCache();
   redirect_to("/movies/" . $movie_id . "/resources/" . $resource_id);
+}
+
+
+dispatch('/pub_accounts/:id', 'showPubAccount');
+function showPubAccount() {
+  global $oahu;
+  $pub_account_id = params('id');
+  $pub_account = $oahu->getPubAccount($pub_account_id);
+  
+  if ($pub_account) {
+    $publications = $oahu->listPublications($pub_account_id, array("limit" => 10));
+    set('pub_account', $pub_account);
+    set('publications', $publications);
+    return render('pub_accounts/show.html.php');
+  } else {
+    return redirect_to('/');
+  }
 }
 
 dispatch_post('/session', 'createSession');

@@ -53,33 +53,6 @@
     </div>
     <div class="container">
       <div class='hero-unit'>
-        <div class="website_account" style="<?php if (!$current_user): ?>display: none;<?php endif ?>">
-        <h3 id="website_oahu_id">
-          User OahuID: 
-          <span><?php echo $current_user ? $current_user->oahu_id : "-" ?></span>
-        </h3>
-        <h3 id="website_user_id">
-          User ID: 
-          <span><?php echo $current_user ? $current_user->id : "-" ?></span>
-        </h3>
-        <h4 id="website_name">
-          Website User Name : 
-          <span><?php echo $current_user ? $current_user->name : "-" ?></span>
-        </h4>
-        </div>
-        <button class='btn secondary disabled' id="website_connect_btn" style="<?php if ($current_user): ?>display: none;<?php endif ?>">Authenticate with Oahu</button>
-        <button class='btn secondary' id="website_disconnect_btn" style="<?php if (!$current_user): ?>display: none;<?php endif ?>">Disconnect from Site</button>
-        <?php if ($current_user && !$current_user->email) : ?>
-        <button class='btn primary' id="website_register_btn">Register Account</button>
-        <?php endif ?>
-        
-        <div id="" class="">
-        <form action="/?/user" method="post">
-          <input type="text" name="name" value="" id="website_user_name" />
-          <input type="text" name="email" value="" id="website_user_email" />
-          <input type="sumbit" name="update" value="update" />
-        </form>
-      </div>
       </div>
       <div id="main"><?php echo $content ?></div>
       <div id="footer"></div>

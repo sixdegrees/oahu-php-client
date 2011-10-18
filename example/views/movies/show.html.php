@@ -6,29 +6,7 @@
 <?php echo $movie->synopsis ?>
 
 <hr>
-<h2>Update Movie</h2>
-<form action="<?php echo url_for("/movies/" . $movie->_id) ?>" method="POST" accept-charset="UTF-8">
-  <table>
-    <input type="hidden" name="_id" value="<?php echo $movie->_id ?>" />
-    <tr>
-      <td>Title: </td>
-      <td><input type="text" name="project[title]" value="<?php echo $movie->title ?>" size="80"></td>
-    </tr>
-    <tr>
-      <td>Synopsis: </td>
-      <td><textarea name="project[synopsis]" cols="60" rows="5"><?php echo $movie->synopsis ?></textarea></td>
-    </tr>
-    <tr>
-      <td>Release Date:</td>
-      <td><input type="text" name="project[release_date]" value="<?php echo $movie->release_date ?>" size="36"></td>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-      <td><input type="submit" value="create" ></td>
-    </tr>
-    
-  </table>
-</form>
+<?php echo partial('movies/_form.html.php'); ?>
 
 <hr>
 
@@ -107,47 +85,7 @@
 </form>
 
 <hr>
-<h2>Pub Accounts</h2>
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Type</th>
-    <th>Name</th>
-    <th>URL</th>
-  </tr>
-  <tr>
-  <?php foreach($pub_accounts as $account): ?>
-    <td><?php echo $account->_id ?></td>
-    <td><?php echo $account->_type ?></td>
-    <td><?php echo $account->name ?></td>
-    <td><a href="<?php echo $account->profile_url ?>"><?php echo $account->profile_url ?></a></td>
-  <?php endforeach ?>
-  </tr>
-</table>
-
+<?php echo partial('shared/_pub_accounts.html.php'); ?>
 <hr>
-
-<h2>Publications</h2>
-<table width="100%" border="1">
-  <tr>
-    <th>ID</th>
-    <th>Slug</th>
-    <th>Type</th>
-    <th>Status</th>
-    <th>Title</th>
-    <th>Created At</th>
-    <th>Updated At</th>
-  </tr>
-  <?php foreach($publications as $publication) : ?>
-  <tr>
-    <td><?php echo $publication->_id ?></td>
-    <td><?php echo $publication->slug ?></td>
-    <td><?php echo $publication->_type ?></td>
-    <td><?php echo $publication->status ?></td>
-    <td><?php echo $publication->title ?></td>
-    <td><?php echo $publication->created_at ?></td>
-    <td><?php echo $publication->updated_at ?></td>
-  </tr>
-<?php endforeach ?>
-</table>
+<?php echo partial('shared/_publications.html.php'); ?>
 
