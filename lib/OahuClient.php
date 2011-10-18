@@ -25,6 +25,8 @@ class OahuConnection {
   public  $consumerSecret;
   public  $consumerId;
   public  $noHttpCache;
+  private $cache;
+  public  $debug;
   
   function OahuConnection($oahuHost, $clientId, $consumerId, $consumerSecret, $noHttpCache, $options) {
     $this->oahuHost       = $oahuHost;
