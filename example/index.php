@@ -55,7 +55,9 @@ function showMovie() {
   if ($movie_id) {
     set('movie', $oahu->getMovie($movie_id));
     $resources = $oahu->getMovieResources($movie_id, array("limit" => 10));
+    $pub_accounts = $oahu->listPubAccounts($movie_id);
     set('resources', $resources);
+    set('pub_accounts', $pub_accounts);
     set('publications', $oahu->getMoviePublications($movie_id));
     return render('movies/show.html.php');
   } else {

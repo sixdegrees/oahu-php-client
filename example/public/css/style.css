@@ -35,3 +35,7 @@ section {
   opacity: 0.8;
   border-top: solid 2px #999;
 }
+
+#footer {
+  margin-bottom: 100px;
+}
