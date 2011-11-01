@@ -132,7 +132,11 @@ function createSession(){
     $_SESSION['oahu_id'] = $_POST['_id']; 
     $current_user = User::find_by_oahu_id($_SESSION['oahu_id']);
     if (!$current_user) {
-      $current_user = User::create(array('oahu_id' => $_SESSION['oahu_id']));
+      $current_user = User::create(array(
+        'oahu_id' => $_SESSION['oahu_id'],
+        'name'    => $_POST['name'],
+        'email'    => $_POST['email']
+      ));
     }
     $_SESSION['user_id'] = $current_user->id;
     return $current_user->to_json();

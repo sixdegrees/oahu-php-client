@@ -10,14 +10,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="public/js/jquery.js"><\/script>')</script>
 
-    <script src="public/js/bootstrap-alerts.js" type="text/javascript" charset="utf-8"></script>
-    <script src="public/js/bootstrap-dropdown.js" type="text/javascript" charset="utf-8"></script>
-    <script src="public/js/bootstrap-twipsy.js" type="text/javascript" charset="utf-8"></script>
-    <script src="public/js/bootstrap-popover.js" type="text/javascript" charset="utf-8"></script>
-    <script src="public/js/bootstrap-scrollspy.js" type="text/javascript" charset="utf-8"></script>
-    <script src="public/js/bootstrap-tabs.js" type="text/javascript" charset="utf-8"></script>
+    <script src="public/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="public/js/bootstrap-modal.js" type="text/javascript" charset="utf-8"></script>
     <script src="<?php echo $config['oahu_js_url'] ?>"></script>
     <script>
     var OahuConfig = <?php echo json_encode(array(
@@ -53,6 +47,7 @@
     </div>
     <div class="container">
       <div class='hero-unit'>
+        <a href="#" id="website_connect_btn" class="btn primary">Create User Session</a>
       </div>
       <div id="main"><?php echo $content ?></div>
       <div id="footer"></div>
