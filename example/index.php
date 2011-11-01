@@ -115,8 +115,16 @@ function showPubAccount() {
   $pub_account_id = params('id');
   $pub_account = $oahu->getPubAccount($pub_account_id);
   
+  $params = array();
+  if (isset($_GET['page'])) {
+    $params['page'] = $_GET['page'];
+  }
+  if (isset($_GET['limit'])) {
+    $params['limit'] = $_GET['limit'];
+  }
+  
   if ($pub_account) {
-    $publications = $oahu->listPublications($pub_account_id, array("limit" => 10));
+    $publications = $oahu->listPublications($pub_account_id, $params);
     set('pub_account', $pub_account);
     set('publications', $publications);
     return render('pub_accounts/show.html.php');

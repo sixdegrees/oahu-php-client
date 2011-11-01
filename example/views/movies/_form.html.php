@@ -18,6 +18,17 @@
       <td>Release Date:</td>
       <td><input type="text" name="project[release_date]" value="<?php echo $movie->release_date ?>" size="36"></td>
     </tr>
+    
+    <tr>
+      <td>Countries:</td>
+      <td><input type="text" name="project[countries]" value="<?php echo implode(",", $movie->countries) ?>" size="36"></td>
+    </tr>
+    
+    <tr>
+      <td>Genres:</td>
+      <td><input type="text" name="project[genres]" value="<?php echo implode(",", $movie->genres) ?>" size="36"></td>
+    </tr>
+    
     <tr>
       <td>&nbsp;</td>
       <td><input type="submit" value="create" ></td>

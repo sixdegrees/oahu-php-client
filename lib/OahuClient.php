@@ -52,10 +52,12 @@ class OahuConnection {
   }
   
   public function exec($type, $path, $params = array(), $headers = array()) {
-    $params["consumer_id"] = $this->consumerId;
-    $params["consumer_secret"] = $this->consumerSecret;
+    // $params["consumer_id"] = $this->consumerId;
+    // $params["consumer_secret"] = $this->consumerSecret;
     $params["format"] = "json";
     $headers[] = "Content-Type: application/json";
+    $headers[] = "CONSUMER_ID: " . $this->consumerId;
+    $headers[] = "CONSUMER_SECRET: " . $this->consumerSecret;
     $url = "http://" . $this->oahuHost . "/v1/clients/" . $this->clientId . "/" . $path;
     
     if ($this->noHttpCache) {
@@ -177,7 +179,7 @@ class OahuClient {
     );
     
     static $modelFields  = array(
-      'Project'               => array('title', 'release_date', 'synopsis', 'genres'),
+      'Project'               => array('title', 'release_date', 'synopsis', 'genres', 'countries'),
       'Resource'              => array('source', 'name', 'description'),
       'Resources::ImageList'  => array('name', 'description', 'image_ids'),
       'Resources::VideoList'  => array('name', 'description', 'video_ids')
