@@ -46,8 +46,8 @@ class OahuConnection {
   
   private function consumerSignature() {
     $sig_time   = mktime();
-    $signature  = md5(implode("-", array($this->clientId, $this->consumerSecret, $sig_time));
-    return implode("|", array($sig_time, $signature));
+    $signature  = md5(implode("-", array($sig_time, $this->clientId, $this->consumerSecret)));
+    return implode("|", array($sig_time, $this->clientId, $signature));
   }
   
   public function flushCache($delay=0) {
@@ -59,9 +59,10 @@ class OahuConnection {
   
   public function exec($type, $path, $params = array(), $headers = array()) {
     $params["format"] = "json";
+    $headers[] = "User-Agent: OahuPHPClient-" . OahuClient::$version;
     $headers[] = "Content-Type: application/json";
-    $headers[] = "CONSUMER_ID: " . $this->consumerId;
-    $headers[] = "CONSUMER_SIG: " . $this->consumerSignature();
+    $headers[] = "Oahu-Consumer-Id: "  . $this->consumerId;
+    $headers[] = "Oahu-Consumer-Sig: " . $this->consumerSignature();
     
     $url = "http://" . $this->oahuHost . "/api/v1/clients/" . $this->clientId . "/" . $path;
     
@@ -175,6 +176,8 @@ class OahuCache {
 
 
 class OahuClient {
+    
+    static $version = "0.1.0";
     
     public  $debug = false;
     
