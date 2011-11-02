@@ -35,10 +35,10 @@ class OahuConnection {
     $this->consumerId     = $consumerId;
     $this->noHttpCache    = $noHttpCache;
     if ($options) {
-      if ($options['debug']) {
+      if (isset($options['debug']) && $options['debug']) {
         $this->debug = array("http_hits" => 0, "cache_hits" => 0, "cache_misses" => 0);
       }
-      if ($options['cache']) {
+      if (isset($options['cache']) && $options['cache']) {
         $this->cache = new OahuCache($options['cache_host'], $options['cache_port'], $options['cache_expiration']);
       }
     }
@@ -200,7 +200,7 @@ class OahuClient {
       $this->consumerId     = $consumerId;
       $this->connection     = new OahuConnection($oahuHost, $clientId, $consumerId, $consumerSecret, $noHttpCache, $options);
       if ($options) {
-        if ($options['debug']) {
+        if (isset($options['debug']) && $options['debug']) {
           $this->debug = array();
         }
       }
