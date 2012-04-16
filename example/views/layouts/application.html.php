@@ -12,10 +12,9 @@
 
     <script src="public/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
 
-    <script src="<?php echo $config['oahu_js_url'] ?>"></script>
+    <script src="//<?php echo $config['host'] ?>/assets/oahu.js"></script>
     <script>
     var OahuConfig = <?php echo json_encode(array(
-      "environment" => $config['oahu_env'],
       "appId"   => $config['consumer_id']
     )); ?>
     </script>
@@ -47,7 +46,13 @@
     </div>
     <div class="container">
       <div class='hero-unit'>
-        <a href="#" id="website_connect_btn" class="btn primary">Create User Session</a>
+        <?php if ($current_user): ?>
+        <h2>Connected on Server as <?php echo $current_user->name; ?></h2>
+        <br/>
+        <a href="#" id="website_disconnect_btn" class="btn primary">Destroy User Session</a>
+        <?php else: ?>
+        <a href="#" id="website_connect_btn" class="btn primary">Create User Session</a>          
+        <?php endif ?>
       </div>
       <div id="main"><?php echo $content ?></div>
       <div id="footer"></div>

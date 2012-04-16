@@ -70,26 +70,25 @@ $(function() {
   // $('.topbar').scrollSpy();
   
   $('#website_connect_btn').live('click',function(){
-    $.post('./?/session', user_account, function(response){
-      if (response.oahu_id) {
-        $('#website_name span').html(response.name)
-        $('#website_user_id span').html(response.id)
-        $('#website_oahu_id span').html(response.oahu_id)
-        $('.website_account').show();
-        $('#website_disconnect_btn').show();
-        $('#website_connect_btn').hide();
-      }
-    },'json');
+    var createSession = function(account) {
+      $.post('./?/session', account, function(response){
+        document.location.reload();
+      },'json');
+    }
+    if (Oahu.account) {
+      createSession(Oahu.account)
+    } else {
+      Oahu.once("oahu:account:success", function(msg, data) { createSession(data); });
+      Oahu.login('Facebook');
+    }
   });
   
   $("#website_disconnect_btn").live('click',function(){
     $.ajax({
       type: 'DELETE',
       url: './?/session',
-      success: function(response){
-        $('.website_account').hide();
-        $('#website_disconnect_btn').hide();
-        $('#website_connect_btn').show();
+      success: function(response) {
+        document.location.reload();
       },
       dataType: 'json'
     });

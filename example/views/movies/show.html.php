@@ -5,6 +5,9 @@
 
 <?php echo $movie->synopsis ?>
 
+<p><b>Countries:</b> <?php echo implode(",", $movie->countries) ?></p>
+<p><b>Genres:</b> <?php echo implode(",", $movie->genres) ?></p>
+
 <hr>
 <?php echo partial('movies/_form.html.php'); ?>
 
