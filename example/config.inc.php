@@ -15,7 +15,7 @@ function _debug($elem) {
   echo "</pre>";
 }
 
-$environment = "neue";
+$environment = "example";
 
 $config = parse_ini_file('./config/' . $environment . '.ini', true);
 
