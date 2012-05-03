@@ -192,9 +192,7 @@ class OahuClient {
       'Resources::ImageList'  => array('name', 'description', 'image_ids'),
       'Resources::VideoList'  => array('name', 'description', 'video_ids')
     );
-    
-    static $projectFilters = array("soon", "live", "featured", "recommended");
-    
+        
     function OahuClient($oahuHost="api.oahu.fr", $clientId, $consumerId, $consumerSecret, $noHttpCache=false, $options=array()) {
       $this->consumerSecret = $consumerSecret;
       $this->consumerId     = $consumerId;
@@ -230,11 +228,8 @@ class OahuClient {
      
     // Movies API
     
-    public function listMovies($filter=null, $params=array()) {
-      if (!in_array($filter, self::$projectFilters)) {
-        $filter = null;
-      }
-      return $this->_get("projects/" . $filter, $params);
+    public function listMovies($params=array()) {
+      return $this->_get("projects", $params);
     }
     
     public function getProject($projectId) {
