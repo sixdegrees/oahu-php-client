@@ -2,14 +2,18 @@
 require('config.inc.php');
 layout('layouts/application.html.php');
 
+
+// Helpers 
+function oahuImageUrl($object_id, $format="small") {
+  global $oahu;
+  return "//" . $oahu->connection->oahuHost . "/img/" . $object_id . "/" . $format;
+};
+
+
+// Controllers
 dispatch('/', 'catalog');
 function catalog() {
   global $oahu;
-  if (isset($_GET['filter'])) {
-    $filter = $_GET['filter'];
-  } else {
-    $filter = null;
-  }
   $params = array();
   if (isset($_GET['page'])) {
     $params['page'] = $_GET['page'];
@@ -18,10 +22,12 @@ function catalog() {
     $params['limit'] = $_GET['limit'];
   }
   $pub_accounts = $oahu->listPubAccounts();
-  $movies = $oahu->listMovies($filter, $params);
-  set('filter', $filter);
+  $movies   = $oahu->listMovies($params);
+  $featured = $oahu->listMovies(array('filters' => array('tag' => 'soon')));
+
   set('moviesList', $movies);
   set('pub_accounts', $pub_accounts);
+  set('featured', $featured);
   return render('catalog.html.php');
 }
 
@@ -143,7 +149,7 @@ function createSession(){
       $current_user = User::create(array(
         'oahu_id' => $_SESSION['oahu_id'],
         'name'    => $_POST['name'],
-        'email'    => $_POST['email']
+        'email'   => $_POST['email']
       ));
     }
     $_SESSION['user_id'] = $current_user->id;

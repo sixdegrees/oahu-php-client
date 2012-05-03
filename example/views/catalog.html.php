@@ -1,3 +1,6 @@
+<?php echo partial('movies/_featured.html.php'); ?>
+
+<hr/>
 <?php echo partial('movies/_list.html.php'); ?>
 
 <hr/>
