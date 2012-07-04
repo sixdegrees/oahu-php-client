@@ -9,7 +9,7 @@
 
 <hr/>
 <?php if ($resource->_type == "Resources::Image"): ?>
-<img src="<?php echo $resource->paths->medium ?>.jpg">
+<img src="<?php echo $resource->paths->medium ?>">
 <?php endif ?>
 
 <hr/>

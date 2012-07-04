@@ -56,13 +56,27 @@ function updateMovie() {
   }  
 }
 
+dispatch_post('/movies/:id/poster/:image_id', 'updateMoviePoster');
+function updateMoviePoster() {
+  global $oahu;
+  $movie_id = params("id");
+  $image_id = params("image_id");
+  if ($movie_id) {
+    $oahu->updateMoviePoster($movie_id, $image_id);
+    $oahu->connection->flushCache();
+    redirect_to('/movies/' . $movie_id);
+  } else {
+    redirect_to('/');
+  }  
+}
+
 dispatch('/movies/:id', 'showMovie');
 function showMovie() {
   global $oahu;
   $movie_id = params("id");
   if ($movie_id) {
     set('movie', $oahu->getMovie($movie_id));
-    $resources = $oahu->getMovieResources($movie_id, array("limit" => 10));
+    $resources = $oahu->getMovieResources($movie_id, array("limit" => 0));
     $pub_accounts = $oahu->listPubAccounts($movie_id);
     set('resources', $resources);
     set('pub_accounts', $pub_accounts);

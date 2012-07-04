@@ -1,12 +1,21 @@
 <a href="<?php echo url_for('/') ?>"><< Back to Movies list...</a>
 
-<h1><?php echo $movie->title ?></h1>
-<h2>Release: <?php echo $movie->release_date ?></h2>
+<div class="row">
+  <div class="span4">
+    <img src="<?php echo oahuImageUrl($movie->default_image_id, "medium"); ?>" style="max-width: 100%" />
+  </div>
+  <div class="span12">
+    <h1><?php echo $movie->title ?></h1>
+    <h2>Release: <?php echo $movie->release_date ?></h2>
+    
+    <?php echo $movie->synopsis ?>
+    
+    <p><b>Countries:</b> <?php echo implode(",", $movie->countries) ?></p>
+    <p><b>Genres:</b> <?php echo implode(",", $movie->genres) ?></p>
+  </div>
+  
+</div>
 
-<?php echo $movie->synopsis ?>
-
-<p><b>Countries:</b> <?php echo implode(",", $movie->countries) ?></p>
-<p><b>Genres:</b> <?php echo implode(",", $movie->genres) ?></p>
 
 <hr>
 <?php echo partial('movies/_form.html.php'); ?>
@@ -19,12 +28,11 @@
   <tr>
     <th colspan='2'>Preview</th>
     <th>ID</th>
-    <th>Slug</th>
     <th>Type</th>
     <th>Name</th>
     <th>Description</th>
     <th>Created At</th>
-    <th>Updated At</th>
+    <th>&nbsp;</th>
   </tr>
   <?php foreach($resources as $resource) : ?>
   <tr>
@@ -38,16 +46,21 @@
     </td>
     <td align="center">
       <?php if ($resource->_type == "Resources::Image") : ?>
-      <img src="<?php echo $resource->paths->thumb ?>.jpg" />
+      <img src="<?php echo $resource->paths->thumb ?>" />
       <?php endif?>
     </td>
     <td><a href="<?php echo url_for("/movies/" . $movie->_id . "/resources/" . $resource->_id) ?>"><?php echo $resource->_id ?></a></td>
-    <td><?php echo $resource->slug ?></td>
     <td><?php echo $resource->_type ?></td>
     <td><?php echo $resource->name ?></td>
     <td><?php echo $resource->description ?></td>
     <td><?php echo $resource->created_at ?></td>
-    <td><?php echo $resource->updated_at ?></td>
+    <td>
+      <?php if ($resource->_type == "Resources::Image"): ?>
+      <form action="<?php echo url_for("/movies/" . $movie->_id . '/poster/' . $resource->_id) ?>" method="POST" accept-charset="UTF-8">
+        <input type="submit" value="Poster">
+      </form>
+      <?php endif ?>
+    </td>
   </tr>
 <?php endforeach ?>
 </table>
