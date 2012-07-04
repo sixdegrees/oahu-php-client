@@ -186,11 +186,12 @@ class OahuClient {
       'Resource'  => array('Image', 'Video', 'ImageList', 'VideoList')
     );
     
+    
     static $modelFields  = array(
-      'Project'               => array('title', 'release_date', 'synopsis', 'genres', 'countries'),
-      'Resource'              => array('source', 'name', 'description'),
-      'Resources::ImageList'  => array('name', 'description', 'image_ids'),
-      'Resources::VideoList'  => array('name', 'description', 'video_ids')
+      'Project'               => array("title", "release_date", "credits",  "genres", "synopsis", "stylesheet_url", "homepage", "countries", "default_image_id", "default_video_id",  "published", "tags"),
+      'Resource'              => array('source', 'name', 'description', 'published'),
+      'Resources::ImageList'  => array('name', 'description', 'image_ids', 'published'),
+      'Resources::VideoList'  => array('name', 'description', 'video_ids', 'published')
     );
         
     function OahuClient($oahuHost="api.oahu.fr", $clientId, $consumerId, $consumerSecret, $noHttpCache=false, $options=array()) {
@@ -261,20 +262,32 @@ class OahuClient {
       ));
     }
     
-    public function getMovieVideos($projectId) {
-      return $this->_get("projects/" . $projectId . "/videos");
+    public function updateMoviePoster($projectId, $imageId) {
+      return $this->updateMovie($projectId, array("default_image_id" => $imageId));
     }
     
-    public function getMoviePhotos($projectId) {
-      return $this->_get("projects/" . $projectId . "/photos");
-    }
-
-    public function getMovieBuzz($projectId) {
-      return $this->_get("projects/" . $projectId . "/buzz");
+    public function updateMovieTrailer($projectId, $videoId) {
+      return $this->updateMovie($projectId, array("default_video_id" => $videoId));
     }
     
     public function getMovieResources($projectId, $params=array()) {
       return $this->_get("projects/" . $projectId . "/resources", $params);
+    }
+    
+    public function getMoviePhotos($projectId, $params=array()) {
+      if (!$params["filters"]) {
+        $params["filters"] = array();
+      }
+      $params["filters"]["type"] = "Resources::Image";
+      return $this->getMovieResources($projectId, $params);
+    }
+    
+    public function getMovieVideos($projectId, $params=array()) {
+      if (!$params["filters"]) {
+        $params["filters"] = array();
+      }
+      $params["filters"]["type"] = "Resources::Video";
+      return $this->getMovieResources($projectId, $params);
     }
     
     public function listMoviePublications($projectId, $params=array()) {
