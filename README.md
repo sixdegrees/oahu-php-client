@@ -84,6 +84,13 @@ example:
   $featured = $oahu->listMovies(array('filters' => array('tag' => 'featured')));
   
   // All Movies, oldest first
-  $all = $oahu->listMovies(array('sort' => 'release_date', 'order' => 'desc', 'limit' => 0));
+  $all = $oahu->listMovies(array('sort' => 'release_date', 'order' => 'asc', 'limit' => 0));
   
+```
+
+### Updating a Movie's default resources (Poster / Trailer)
+
+```php
+  $oahu->updateMoviePoster($movieId, $imageId)
+  $oahu->updateMovieTrailer($movieId, $videoId)
 ```
