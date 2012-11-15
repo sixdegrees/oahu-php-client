@@ -9,5 +9,8 @@
       "name": "Oahu Dev Team",
       "email": "dev@oahu.fr"
     }
-  ]
+  ],
+  "require" : {
+    "facebook/php-sdk" : "*"
+  }
 }
