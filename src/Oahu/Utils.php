@@ -2,7 +2,7 @@
 /**
 * Oahu Utilities
 */
-class OahuUtils {
+class Oahu_Utils {
   
 /**
    * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)

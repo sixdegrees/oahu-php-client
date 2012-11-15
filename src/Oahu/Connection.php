@@ -18,7 +18,7 @@
     }
   }
 
-  class OahuConnection {
+  class Oahu_Connection {
     
     public  $host;
     public  $clientId;
@@ -28,7 +28,7 @@
     private $cache;
     public  $debug;
     
-    function OahuConnection($config=array()) {
+    function Oahu_Connection($config=array()) {
 
       $this->host        = $config['host'];
       $this->host        = str_replace('https://', 'http://', $this->host);
@@ -48,7 +48,7 @@
         $this->debug_options = array("httpHits" => 0, "cacheHits" => 0, "cacheMisses" => 0);
       }
       if (isset($config['cache']) && $config['cache']==='true') {
-        $this->cache = new OahuCache($config['cacheHost'], $config['cachePort'], $config['cacheExpiration']);
+        $this->cache = new Oahu_Cache($config['cacheHost'], $config['cachePort'], $config['cacheExpiration']);
       }
     }
     
@@ -67,7 +67,7 @@
     
     public function exec($type, $path, $params = array(), $headers = array()) {
       $params["format"] = "json";
-      $headers[] = "User-Agent: OahuPHPClient-" . OahuClient::$version;
+      $headers[] = "User-Agent: OahuPHPClient-" . Oahu_Client::$version;
       $headers[] = "Content-Type: application/json";
       $headers[] = "Oahu-Consumer-Id: "  . $this->appId;
       $headers[] = "Oahu-Consumer-Sig: " . $this->consumerSignature();

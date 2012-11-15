@@ -1,6 +1,6 @@
 <?php 
-class OahuFacebook {
-  function OahuFacebook($config=array()){
+class  Oahu_Facebook {
+  function  Oahu_Facebook($config=array()){
     $this->config               = $config;
     $this->appId                = $config['appId'];
     $this->secret               = $config['secret'];

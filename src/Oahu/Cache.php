@@ -1,7 +1,7 @@
 <?php 
-class OahuCache {
+class Oahu_Cache {
   
-  function OahuCache($host="localhost", $port=11211, $expiration=120) {
+  function Oahu_Cache($host="localhost", $port=11211, $expiration=120) {
     $this->client = new Memcached();
     $this->client->addServer($host, $port);
     $this->defaultExpiration = $expiration;

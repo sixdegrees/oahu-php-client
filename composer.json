@@ -12,5 +12,8 @@
   ],
   "require" : {
     "facebook/php-sdk" : "*"
+  },
+  "autoload" : {
+    "psr-0" : { "Oahu" : "src/" }
   }
 }

@@ -3,7 +3,7 @@
 require_once 'Connection.php';
 require_once 'Cache.php';
 
-class OahuClient {
+class Oahu_Client {
     
   static $version = "0.1.0";
   static $dateFormat = "Y-m-d H:i:s O";
@@ -22,7 +22,7 @@ class OahuClient {
     'Resources::VideoList'  => array('name', 'description', 'video_ids', 'published')
   );
       
-  function OahuClient($o_config=array()){
+  function Oahu_Client($o_config=array()){
     // $host="api.oahu.fr", $clientId, $appId, $appSecret, $noHttpCache=false, $options=array())
 
     $this->config = $o_config;
@@ -38,10 +38,10 @@ class OahuClient {
     $this->appId       = $config['appId'];
     $this->appSecret   = $config['appSecret'];
 
-    $this->connection     = new OahuConnection($config);
+    $this->connection     = new Oahu_Connection($config);
 
     if (isset($o_config['fb']) && $o_config['fb']['appId'] ) {
-      $this->facebook = new OahuFacebook($o_config['fb']);
+      $this->facebook = new  Oahu_Facebook($o_config['fb']);
     }
 
     if (isset($config['noHttpCache'])){
