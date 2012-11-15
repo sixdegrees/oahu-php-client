@@ -8,7 +8,7 @@ class Oahu_Client {
   static $version = "0.1.0";
   static $dateFormat = "Y-m-d H:i:s O";
 
-  public  $debug = false;
+  public $debug = false;
   
   static $modelTypes   = array(
     'Project'   => array('Project'),
@@ -21,27 +21,27 @@ class Oahu_Client {
     'Resources::ImageList'  => array('name', 'description', 'image_ids', 'published'),
     'Resources::VideoList'  => array('name', 'description', 'video_ids', 'published')
   );
-      
+  
+  static $configKeys = array('host', 'clientId', 'projectId', 'appId', 'appSecret');
+
+  static $defaultConfig = array('host' => 'app.oahu.fr', 'debug' => false);
+
   function Oahu_Client($o_config=array()){
-    // $host="api.oahu.fr", $clientId, $appId, $appSecret, $noHttpCache=false, $options=array())
 
-    $this->config = $o_config;
+    $config = self::parseConfig($o_config['oahu']);
 
-    $config = $o_config['oahu'];
-    if(!isset($config['host'])){
-      $config['host'] = 'app.oahu.fr';
-    }
-
+    $this->config = $config;
+    
     $this->host        = $config['host'];
     $this->clientId    = $config['clientId'];
     $this->projectId   = $config['projectId'];
     $this->appId       = $config['appId'];
     $this->appSecret   = $config['appSecret'];
 
-    $this->connection     = new Oahu_Connection($config);
+    $this->connection  = new Oahu_Connection($config);
 
     if (isset($o_config['fb']) && $o_config['fb']['appId'] ) {
-      $this->facebook = new  Oahu_Facebook($o_config['fb']);
+      $this->facebook = new Oahu_Facebook($o_config['fb']);
     }
 
     if (isset($config['noHttpCache'])){
@@ -59,9 +59,34 @@ class Oahu_Client {
       $this->debug_options = array();
     }
   }
+
+  private static function parseConfig($config=array()) {
+    // Oahu config
+    
+    function decamelize($camel,$splitter="_") {
+      $camel=preg_replace('/(?!^)[[:upper:]][[:lower:]]/', '$0', preg_replace('/(?!^)[[:upper:]]+/', $splitter.'$0', $camel));
+      return strtolower($camel);
+    }
+    
+    foreach (self::$configKeys as $key) {
+      $val = NULL;
+      $envKey = "OAHU_" . strtoupper(decamelize($key));
+
+      if (isset($config[$key])) {
+        $val = $config[$key];
+      } elseif (getenv($envKey)) {
+        $val = getenv($envKey);
+      } elseif (isset(self::$defaultConfig[$key])) {
+        $val = self::$defaultConfig[$key];
+      }
+
+      $config[$key] = $val;
+    }
+    return $config;
+  }
   
   private function getSignedRequestCookieName() {
-    return 'hsr_'.$this->appId;
+    return 'hsr_' . $this->appId;
   }
 
   private function getSignedAccount() {
@@ -169,6 +194,7 @@ class Oahu_Client {
       )
     );
   }
+
   public function updateProjectResource($projectId, $resourceId, $resourceData) {
     $res = $this->getProjectResource($projectId, $resourceId);
     if (!$res) {
@@ -216,6 +242,13 @@ class Oahu_Client {
     return $this->_get('pub_accounts/' . $pubAccountId . "/publications", $params);
   }
 
+  // App
+  public function getApp($appId=null) {
+    if (!$appId) {
+      $appId = $this->appId;  
+    }
+    return $this->_get('apps/'.$appId);
+  }
 
   //Badges API
   public function listAchievements($params=array()) {
