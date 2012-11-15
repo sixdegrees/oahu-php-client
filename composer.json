@@ -1,13 +1,13 @@
 {
-    "name": "oahu/oahu",
-    "type": "library",
-    "description": "Oahu PHP Client",
-    "homepage": "http://github.com/sixdegrees/oahu-php-client",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Oahu Dev Team",
-            "email": "dev@oahu.fr"
-        }
-    ]
+  "name": "oahu/oahu",
+  "type": "library",
+  "description": "Oahu PHP Client",
+  "homepage": "http://github.com/sixdegrees/oahu-php-client",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Oahu Dev Team",
+      "email": "dev@oahu.fr"
+    }
+  ]
 }
