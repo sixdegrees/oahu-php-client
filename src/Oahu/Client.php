@@ -22,7 +22,7 @@ class Oahu_Client {
     'Resources::VideoList'  => array('name', 'description', 'video_ids', 'published')
   );
   
-  static $configKeys = array('host', 'clientId', 'projectId', 'appId', 'appSecret');
+  static $configKeys = array('debug', 'host', 'clientId', 'projectId', 'appId', 'appSecret');
 
   static $defaultConfig = array('host' => 'app.oahu.fr', 'debug' => false);
 
