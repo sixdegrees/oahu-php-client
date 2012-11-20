@@ -10,6 +10,9 @@ function rglob($pattern='*', $flags = 0, $path='') {
 
 class Oahu_Helpers {
   public static function includeTemplates($path) {
+    if ($path[count($path) - 1] != "/") {
+      $path = $path . "/";
+    }
     $ret = array();
     $tpls = rglob("*.hbs", 0, $path);
     foreach ($tpls as $filename){
