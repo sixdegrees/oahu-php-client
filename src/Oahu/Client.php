@@ -19,7 +19,8 @@ class Oahu_Client {
     'Project'               => array("title", "release_date", "credits",  "genres", "synopsis", "stylesheet_url", "homepage", "countries", "default_image_id", "default_video_id",  "published", "tags"),
     'Resource'              => array('source', 'name', 'description', 'published'),
     'Resources::ImageList'  => array('name', 'description', 'image_ids', 'published'),
-    'Resources::VideoList'  => array('name', 'description', 'video_ids', 'published')
+    'Resources::VideoList'  => array('name', 'description', 'video_ids', 'published'),
+    'List'                  => array('name', 'description', 'item_ids', 'tags')
   );
   
   static $configKeys = array('debug', 'host', 'clientId', 'projectId', 'appId', 'appSecret');
@@ -248,6 +249,32 @@ class Oahu_Client {
       $appId = $this->appId;  
     }
     return $this->_get('apps/'.$appId);
+  }
+
+  // Lists API
+  
+  public function getList($listId) {
+    return $this->_get('apps/' . $this->appId . '/lists/' . $listId);
+  }
+
+  public function getLists($filters) {
+    return $this->_get('apps/' . $this->appId . '/lists', array('filters' => $filters));
+  }
+
+  public function createList($listData) {
+    return $this->_post('apps/' . $this->appId . '/lists', $listData);
+  }
+
+  public function updateList($listId, $listData) {
+    return $this->_put('apps/' . $this->appID . '/lists/' . $listId, $listData);
+  }
+
+  public function addListItem($listId, $itemId) {
+    return $this->_post('apps/' . $this->appId . '/lists/' . $listId . '/add_item',  array("item_id" => $itemId));
+  }
+
+  public function removeListItem($listId, $itemId) {
+    return $this->_post('apps/' . $this->appId . '/lists/' . $listId . '/remove_item',  array("item_id" => $itemId));
   }
 
   //Badges API
