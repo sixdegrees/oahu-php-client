@@ -266,7 +266,7 @@ class Oahu_Client {
   }
 
   public function updateList($listId, $listData) {
-    return $this->_put('apps/' . $this->appID . '/lists/' . $listId, $listData);
+    return $this->_put('apps/' . $this->appId . '/lists/' . $listId, $listData);
   }
 
   public function addListItem($listId, $itemId) {
