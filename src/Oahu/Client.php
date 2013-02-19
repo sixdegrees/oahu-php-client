@@ -257,8 +257,8 @@ class Oahu_Client {
     return $this->_get('apps/' . $this->appId . '/lists/' . $listId);
   }
 
-  public function getLists($filters) {
-    return $this->_get('apps/' . $this->appId . '/lists', array('filters' => $filters));
+  public function getLists($params) {
+    return $this->_get('apps/' . $this->appId . '/lists', $params);
   }
 
   public function createList($listData) {
