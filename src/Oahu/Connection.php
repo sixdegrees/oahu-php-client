@@ -87,7 +87,11 @@
     }
     
     private function _cache_exec($url, $params, $headers) {
-      $ident = $url . "?" . http_build_query($params) . "|" . implode(",", $headers);
+      $ident = $url . "?" . http_build_query($params);
+      if (isset($headers['Oahu-Consumer-Id'])) {
+        $ident .= "|" . $headers['Oahu-Consumer-Id'];
+      }
+
       $ident = md5($ident);
       
       $res = $this->cache->get($ident);
