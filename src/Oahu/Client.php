@@ -448,6 +448,11 @@ class Oahu_Client {
 
 
   // HTTP Plumbing...
+  public function get($path, $params=array(), $headers=array()) {
+    return $this->_get($path, $params, $headers);
+  }
+  
+  // HTTP Plumbing...
   private function _get($path, $params=array(), $headers=array()) {
     $res = $this->connection->exec("GET", $path, $params, $headers);
     return $res['body'];
