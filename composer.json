@@ -10,7 +10,7 @@
       "email": "dev@oahu.fr"
     }
   ],
-  "require" : {
+  "suggest" : {
     "facebook/php-sdk" : "*"
   },
   "autoload" : {
