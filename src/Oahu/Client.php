@@ -55,7 +55,7 @@ class Oahu_Client {
       $this->verbose = false;
     }
 
-    if (isset($config['debug']) && $config['debug']=='true') {
+    if (isset($config['debug']) && $config['debug']) {
       $this->debug = (bool)$config['debug'];
       $this->debug_options = array();
     }
@@ -452,6 +452,15 @@ class Oahu_Client {
     return $this->_get($path, $params, $headers);
   }
   
+  public function post($path, $data=array(), $headers=array()) {
+    return $this->_post($path, $data, $headers);
+  }
+
+  public function put($path, $data=array(), $headers=array()) {
+    return $this->_put($path, $data, $headers);
+  }
+
+
   // HTTP Plumbing...
   private function _get($path, $params=array(), $headers=array()) {
     $res = $this->connection->exec("GET", $path, $params, $headers);

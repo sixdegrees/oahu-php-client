@@ -44,10 +44,10 @@
         $this->noHttpCache = $config['noHttpCache'];
       }
 
-      if (isset($config['debug']) && $config['debug']==='true') {
+      if (isset($config['debug']) && $config['debug']) {
         $this->debug_options = array("httpHits" => 0, "cacheHits" => 0, "cacheMisses" => 0);
       }
-      if (isset($config['cache']) && $config['cache']==='true') {
+      if (isset($config['cache']) && $config['cache']) {
         $this->cache = new Oahu_Cache($config['cacheHost'], $config['cachePort'], $config['cacheExpiration']);
       }
     }
