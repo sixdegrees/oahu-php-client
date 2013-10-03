@@ -11,7 +11,7 @@ class Oahu_Client {
   public $debug = false;
   
   static $modelTypes   = array(
-    'Project'   => array('Project'),
+    'Project'   => array('Project', 'Movie'),
     'Resource'  => array('Image', 'Video', 'ImageList', 'VideoList')
   );
    
