@@ -31,12 +31,13 @@ Available types are `PubAccounts::FacebookWall`, `PubAccounts::Twitter`, `PubAcc
 
 `GET /api/clients/:client_id/projects/:project_id/pub_accounts`
 
-#### Getting a PubAccount
-
-`GET /api/clients/:client_id/projects/:project_id/pub_accounts/:pub_account_id`
-
 
 *Optional params*
 * limit - number of projects returned
 * page  - page number
+
+
+#### Getting a PubAccount
+
+`GET /api/clients/:client_id/projects/:project_id/pub_accounts/:pub_account_id`
 
