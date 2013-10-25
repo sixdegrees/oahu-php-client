@@ -126,6 +126,16 @@ class Oahu_Client {
     }
   }
 
+  public function getAccount($accountId) {
+    return $this->_get('accounts/' . $accountId);
+  }
+
+  public function getCurrentAccount() {
+    $accountId = $this->validateUserAccount();
+    if ($accountId) {
+      return $this->getAccount($accountId);
+    }
+  }
    
   // Project API
   public function listProjects($params=array()) {

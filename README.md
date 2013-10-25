@@ -86,10 +86,14 @@ API (GET) responses will be cached in Memcached if caching is enabled.
     <?php 
     $oahu->get('projects', array('limit' => 10, 'page' => 2))
 
-### Getting the current User if connected via Oahu connect
 
-    $accountId      = $oahu->validateUserAccount();
+### Getting the infos on a User Account by its id
+
     $accountInfos   = $oahu->getAccount($accountId);
+
+### Getting the current User Account if connected via Oahu connect
+
+    $accountInfos = $oahu->getCurrentAccount();
 
 ### APIs
 
