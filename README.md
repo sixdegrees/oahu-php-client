@@ -104,61 +104,61 @@ API (GET) responses will be cached in Memcached if caching is enabled.
 
 ##### [Projects API](docs/projects.md)
 
-###### listProjects($params=array())
+##### listProjects($params=array())
 
 Returns a list of Projects for the current Client
 
-###### getProject($projectId)
+##### getProject($projectId)
 
 Returns a Project's infos
 
-###### createProject($projectType, $projectData)
+##### createProject($projectType, $projectData)
 
 Creates a new Project
 
-###### updateProject($projectId, $projectData)
+##### updateProject($projectId, $projectData)
 
 Update a Project's infos
 
-###### updateProjectPoster($projectId, $imageId)
+##### updateProjectPoster($projectId, $imageId)
 
 Set the Project's Poster (default image)
 
-###### updateProjectTrailer($projectId, $videoId)
+##### updateProjectTrailer($projectId, $videoId)
 
 Sets the Project's Trailer (default video)
 
-###### getProjectResources($projectId, $params)
+##### getProjectResources($projectId, $params)
 
 Get all Projects resources (Image, Video, ImageList, VideoList)
 
-###### getProjectPhotos($projectId, $params)
+##### getProjectPhotos($projectId, $params)
 
 Get all Project's Image resources
 
-###### getProjectVideos($projectId, $params)
+##### getProjectVideos($projectId, $params)
 
 Get all Project's Video resources
 
-###### listProjectPubAccounts($projectId)
+##### listProjectPubAccounts($projectId)
 
 Get all Project's PubAccounts (Facebook pages, Twitter accounts)
 
 ##### [Resources API](docs/resources.md)
 
-###### createProjectResource($projectId, $resourceType, $resourceData)
+##### createProjectResource($projectId, $resourceType, $resourceData)
 
 Create a new Resource (Image, Video, ImageList, VideoList)
 
-###### updateProjectResource($projectId, $resourceId, $resourceData) 
+##### updateProjectResource($projectId, $resourceId, $resourceData) 
 
 Update a single Resource
 
-###### createProjectImageList($projectId, $resourceData)
+##### createProjectImageList($projectId, $resourceData)
 
 Helper to create an ImageList
 
-###### createProjectVideoList($projectId, $resourceData)
+##### createProjectVideoList($projectId, $resourceData)
 
 Helper to create an VideoList
 
