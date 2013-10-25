@@ -69,66 +69,88 @@ API (GET) responses will be cached in Memcached if caching is enabled.
     $oahu->get('projects');
 
 
+
 ##### Getting Apps related to a Project
 
     <?php
-    // where 'xxxxxx' is a valid project_id
-    $oahu->get('projects/xxxxxx/apps');
+    // where ':project_id' is a valid project_id
+    $oahu->get('projects/:project_id/apps');
 
 ##### Getting PubAccounts related to a Project
 
     <?php
-    // where 'xxxxxx' is a valid project_id
-    $oahu->get('projects/xxxxxx/pub_accounts');
+    // where ':project_id' is a valid project_id
+    $oahu->get('projects/:project_id/pub_accounts');
 
 ###### Using pagination
     <?php 
     $oahu->get('projects', array('limit' => 10, 'page' => 2))
 
-##### Updating a Project
-
 ### Getting the current User if connected via Oahu connect
 
-    $userId = $oahu->validateUserAccount();
+    $accountId      = $oahu->validateUserAccount();
+    $accountInfos   = $oahu->getAccount($accountId);
 
-#### Helper Methods
 
-##### Projects API
+##### [Projects API](docs/projects.md)
 
 ###### listProjects($params=array())
 
+Returns a list of Projects for the current Client
+
 ###### getProject($projectId)
+
+Returns a Project's infos
 
 ###### createProject($projectType, $projectData)
 
+Creates a new Project
+
 ###### updateProject($projectId, $projectData)
+
+Update a Project's infos
 
 ###### updateProjectPoster($projectId, $imageId)
 
+Set the Project's Poster (default image)
+
 ###### updateProjectTrailer($projectId, $videoId)
+
+Sets the Project's Trailer (default video)
 
 ###### getProjectResources($projectId, $params)
 
+Get all Projects resources (Image, Video, ImageList, VideoList)
+
 ###### getProjectPhotos($projectId, $params)
+
+Get all Project's Image resources
 
 ###### getProjectVideos($projectId, $params)
 
+Get all Project's Video resources
+
 ###### listProjectPubAccounts($projectId)
 
-###### listProjectPublications($projectId, $params)
+Get all Project's PubAccounts (Facebook pages, Twitter accounts)
 
 ##### Resources API
 
-###### getProjectResource($projectId, $resourceId)
-
 ###### createProjectResource($projectId, $resourceType, $resourceData)
+
+Create a new Resource (Image, Video, ImageList, VideoList)
 
 ###### updateProjectResource($projectId, $resourceId, $resourceData) 
 
+Update a single Resource
+
 ###### createProjectImageList($projectId, $resourceData)
 
+Helper to create an ImageList
+
 ###### createProjectVideoList($projectId, $resourceData)
-  
+
+Helper to create an VideoList
 
 
 
