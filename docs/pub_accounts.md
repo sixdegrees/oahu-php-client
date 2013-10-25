@@ -5,7 +5,7 @@
 ```json
 {
   "id": "4d89bb7463060b542e00014f",
-  "client_id": "5bb5c26bacb93e792f000007"
+  "client_id": "5bb5c26bacb93e792f000007",
   "project_id": "523077c5893b0c9a1f007803",
   "_type": "PubAccounts::FacebookWall",
   "created_at": "2012-07-23T16:05:19+02:00",
@@ -15,7 +15,7 @@
   "updated_at": "2013-09-06T01:13:55+02:00",
   "username": "MyFacebookPage",
   "url": "http://facebook.com/MyFacebookPage",
-  "token_status": "valid",
+  "token_status": "valid"
 }
 ```
 
