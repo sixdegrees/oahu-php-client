@@ -101,7 +101,8 @@ API (GET) responses will be cached in Memcached if caching is enabled.
 * [Apps](docs/apps.md)
 * [PubAccounts](docs/pub_accounts.md)
 * [Projects](docs/projects.md)
-* [Account and Players](docs/accounts.md)
+* [Account](docs/accounts.md)
+* [Player Accounts](docs/players.md)
 
 
 ### Method Helpers
