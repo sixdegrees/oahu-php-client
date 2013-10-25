@@ -2,6 +2,7 @@
 
 ### Example Account
 
+```json
 {
   "id": "5261502e09e50d74c6000002",
   "email": "example@example.com",
@@ -16,7 +17,7 @@
   },
   "created_at": "2013-10-18T17:13:50+02:00",
 }
-
+```
 
 ### Routes
 
