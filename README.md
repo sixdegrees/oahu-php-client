@@ -91,6 +91,16 @@ API (GET) responses will be cached in Memcached if caching is enabled.
     $accountId      = $oahu->validateUserAccount();
     $accountInfos   = $oahu->getAccount($accountId);
 
+### APIs
+
+* [Clients](docs/clients.md)
+* [Apps](docs/apps.md)
+* [PubAccounts](docs/pub_accounts.md)
+* [Projects](docs/projects.md)
+* [Account and Players](docs/accounts.md)
+
+
+### Method Helpers
 
 ##### [Projects API](docs/projects.md)
 
@@ -134,7 +144,7 @@ Get all Project's Video resources
 
 Get all Project's PubAccounts (Facebook pages, Twitter accounts)
 
-##### Resources API
+##### [Resources API](docs/resources.md)
 
 ###### createProjectResource($projectId, $resourceType, $resourceData)
 
@@ -152,6 +162,8 @@ Helper to create an ImageList
 
 Helper to create an VideoList
 
+
+##### [Apps API](docs/apps.md)
 
 
 
