@@ -1,37 +1,26 @@
-# Player Accounts
+# User Accounts
 
 ### Example Account
 
-```json
 {
-  "id": "5252b1f6873b0c557500e8e8",
-  "account_id": "514890ae113b0c1622001107",
-  "balance": {},
-  "created_at": "2013-10-07T15:07:02+02:00",
-  "extra": {},
-  "name": null,
-  "updated_at": "2013-10-07T15:07:02+02:00",
-  "player_account": {
-    "_id": "514890ae873b0c1692001107",
+  "id": "5261502e09e50d74c6000002",
+  "email": "example@example.com",
+  "name": "Example User",
+  "picture": "http://graph.facebook.com/11111111111/picture?type=square",
+  "facebook": {
     "email": "example@example.com",
-    "name": "My Real Name",
-    "picture": "http://graph.facebook.com/1000011111111/picture?type=square"
+    "name": "Example User",
+    "picture": "http://graph.facebook.com/11111111111/picture?type=square",
+    "uid": "11111111111",
+    "username": "my.user.name"
   },
+  "created_at": "2013-10-18T17:13:50+02:00",
 }
-```
-
-### Routes 
-
-#### Listing players
-
-GET /api/v1/clients/:client_id/apps/:app_id/players
-
-*Optional params*
-* limit - number of accounts returned
-* page  - page number
 
 
-#### Getting a Player
+### Routes
 
-GET /api/v1/clients/:client_id/apps/:app_id/players/:player_id
+#### Getting a user by its ID
+
+GET /api/v1/clients/:client_id/accounts/:account_id
 
