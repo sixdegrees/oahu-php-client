@@ -37,7 +37,8 @@
     "updated_at": "2013-10-04T16:48:18+02:00"
   },
   "project_title": "My Project",
-}]```
+}]
+```
 
 ### Routes 
 
