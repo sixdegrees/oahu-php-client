@@ -1,6 +1,6 @@
 # User Accounts
 
-### Example Account
+### Example User Account
 
 ```json
 {
@@ -21,7 +21,7 @@
 
 ### Routes
 
-#### Getting a user by its ID
+#### Getting a User Account by its ID
 
 GET /api/v1/clients/:client_id/accounts/:account_id
 
