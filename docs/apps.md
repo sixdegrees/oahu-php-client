@@ -4,7 +4,7 @@
 
 ```json
 [{
-  "id": "524eeb02873b0c6975006712"
+  "id": "524eeb02873b0c6975006712",
   "_type": "Game",
   "api_token": "xxxxx",
   "authorized_domains": null,
