@@ -50,7 +50,7 @@
       }
 
       if (isset($config['debug']) && $config['debug']) {
-        $this->debug_options = array("httpHits" => 0, "cacheHits" => 0, "cacheMisses" => 0);
+        $this->debug_options = array("http_hits" => 0, "cache_hits" => 0, "cache_misses" => 0);
       }
       if (isset($config['cache']) && $config['cache']) {
         $this->cache = new Oahu_Cache($config['cacheHost'], $config['cachePort'], $config['cacheExpiration']);
